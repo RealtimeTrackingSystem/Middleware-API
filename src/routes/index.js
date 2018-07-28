@@ -11,6 +11,7 @@ function routes (app) {
     res.status(200).send(success);
   });
   app.use(require('./auth.route'));
+  app.use(require('./reports.route'));
   app.use('*', function (req, res){
     const path = req.params['0'];
     const message = `${path} is not a valid path`;

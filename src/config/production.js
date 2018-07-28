@@ -10,7 +10,9 @@ const CONFIG = {
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
     SENDGRID_PASSWORD: process.env.SENDGRID_PASSWORD,
     SENDGRID_USERNAME: process.env.SENDGRID_USERNAME
-  }
+  },
+  REPORT_API_KEY: process.env.REPORT_API_KEY,
+  REPORT_API_URL: process.env.REPORT_API_URL
 };
 
 module.exports = CONFIG;
