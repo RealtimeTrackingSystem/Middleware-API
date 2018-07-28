@@ -43,7 +43,7 @@ const jwtOptions = {
 };
 
 const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
-  return DB.User.findById(payload.sub)
+  return DB.User.findById(payload._id)
     .select('-password')
     .then(function (user) {
       if (!user) {

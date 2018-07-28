@@ -1,7 +1,7 @@
 
 const express = require('express');
 const passport = require('passport');
-require('../models/User');
+require('../models');
 require('../lib/passport');
 const handlers = require('../handlers');
 const requireSignin = passport.authenticate('local', { session: false });

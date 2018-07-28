@@ -14,6 +14,7 @@ const cookieParser = require('cookie-parser');
 const routes = require('./routes');
 const CONFIG = require('./config');
 const lib = require('./lib');
+const Api = require('./lib/rcrts-report-api');
 
 // set up express app
 const app = express();
@@ -61,6 +62,7 @@ app.use(validator({
 // adding req variables
 app.use(function (req, res, next) {
   req.logger = {};
+  req.api = new Api(config.REPORT_API_KEY, config.REPORT_API_URL);
   req.logger = lib.logger;
   req.$scope = {};
   req.DB = DB;
