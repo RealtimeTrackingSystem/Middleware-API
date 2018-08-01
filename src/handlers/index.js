@@ -1,4 +1,5 @@
 module.exports = {
   auth: require('./auth'),
-  reports: require('./reports')
+  reports: require('./reports'),
+  media: require('./media')
 };

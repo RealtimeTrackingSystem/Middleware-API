@@ -16,6 +16,11 @@ const CONFIG = require('./config');
 const lib = require('./lib');
 const Api = require('./lib/rcrts-report-api');
 
+// loading .env file for non production env
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+
 // set up express app
 const app = express();
 const config = CONFIG[process.env.NODE_ENV || 'development'];
