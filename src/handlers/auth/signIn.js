@@ -7,7 +7,10 @@ function logic (req, res) {
     status: 'SUCCESS',
     statusCode: 0,
     httpCode: 200,
-    token: token
+    payload: {
+      user: req.user,
+      token: token
+    }
   });
   res.status(200).send({
     status: 'SUCCESS',

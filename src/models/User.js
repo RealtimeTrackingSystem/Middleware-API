@@ -17,8 +17,13 @@ const UserSchema = new Schema({
   country: { type: String },
   zip: { type: String },
   reporterID: { type: String },
-  adminHosts: [ String ],
-  memberHosts: [ String ]
+  hosts: [{
+    _id: String,
+    isOwner: Boolean,
+    isAdmin: Boolean,
+    isBlocked: Boolean
+  }],
+  accessLevel: { type: String, Enum: ['ADMIN', 'USER'] }
 }, { timestamps: true });
 
 UserSchema.statics.findByUsernameOrEmail = function (credential) {
@@ -40,7 +45,7 @@ UserSchema.statics.checkPassword = function (_id, password) {
 UserSchema.statics.add = function (user) {
   return lib.crypto.hashAndSalt(user.password)
     .then(function (hash) {
-      const newUser = new User({
+      const newUser = new this.model({
         username: user.username,
         email: user.email,
         password: hash,
