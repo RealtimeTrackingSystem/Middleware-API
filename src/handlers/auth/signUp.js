@@ -1,4 +1,12 @@
 const lib = require('../../lib');
+const DB = require('../../models');
+
+function rollBack (userId, err) {
+  return DB.User.findByIdAndRemove(userId)
+    .then(function () {
+      return err;
+    });
+}
 
 function validateParams (req, res, next) {
   const schema = {
@@ -52,14 +60,14 @@ function validateParams (req, res, next) {
     alias: {
       optional: true,
       isLength: {
-        options: { min: 4, max: 20 },
+        options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: Alias'
       }
     },
     street: {
       optional: true,
       isLength: {
-        options: { min: 4, max: 20 },
+        options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: Street'
       }
     },
@@ -73,21 +81,21 @@ function validateParams (req, res, next) {
     city: {
       optional: true,
       isLength: {
-        options: { min: 4, max: 20 },
+        options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: City'
       }
     },
     region: {
       optional: true,
       isLength: {
-        options: { min: 4, max: 20 },
+        options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: Region'
       }
     },
     country: {
       optional: true,
       isLength: {
-        options: { min: 4, max: 20 },
+        options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: Country'
       }
     },
@@ -97,26 +105,7 @@ function validateParams (req, res, next) {
         options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: Zip'
       }
-    },
-    reporterID: {
-      optional: true,
-      isLength: {
-        options: { min: 2, max: 30 },
-        errorMessage: 'Invalid Parameter Length: Reporter ID'
-      }
-    },
-    adminHosts: {
-      optional: true,
-      isArray: {
-        errorMessage: 'Invalid Parameter: Admin Hosts'
-      }
-    },
-    memberHosts: {
-      optional: true,
-      isArray: {
-        errorMessage: 'Invalid Parameter: Member Hosts'
-      }
-    },
+    }
   };
   req.checkBody(schema);
   req.checkBody()
@@ -125,7 +114,7 @@ function validateParams (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn('POST /api/auth/signup', errorObject);
+    req.logger.warn(errorObject, 'POST /api/auth/signup');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -137,12 +126,12 @@ function checkDuplicateCredentials (req, res, next) {
     .then(function (user) {
       if (user) {
         const error = lib.errorResponses.validationError([{msg: 'Invalid Parameter: Username or Email - Already In Use'}]);
-        req.logger.warn('POST /api/auth/signup', error);
+        req.logger.warn(error, 'POST /api/auth/signup');
         return res.status(400).send(error);
       }
       return next();
     }).catch(function (err) {
-      req.logger.error('POST /api/auth/signup', err);
+      req.logger.error(err, 'POST /api/auth/signup');
       const errorObject = lib.errorResponses.internalServerError('Failed in Checking Credentials');
       return res.status(errorObject.httpCode).send(errorObject);
     });
@@ -164,9 +153,7 @@ function addUserToScope (req, res, next) {
     region: user.region,
     country: user.country,
     zip: user.zip,
-    reporterID: user.reporterID,
-    adminHosts: user.adminHosts || [],
-    memberHosts: user.memberHosts || []
+    reporterID: user.reporterID
   };
   return next();
 }
@@ -174,24 +161,84 @@ function addUserToScope (req, res, next) {
 function logic (req, res, next) {
   return req.DB.User.add(req.$scope.user)
     .then(function (user) {
+      user = user.toObject();
       delete user.password;
       req.$scope.newUser = user;
       return next();
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('POST /api/auth/signup', err);
+      req.logger.error(err, 'POST /api/auth/signup');
       res.status(500).send(error);
     });
 }
 
+function replicateUser (req, res, next) {
+  const user = req.$scope.newUser;
+  const reporter = {
+    fname: user.fname,
+    lname: user.lname,
+    street: user.street,
+    barangay: user.barangay,
+    city: user.city,
+    region: user.region,
+    country: user.country,
+    zip: user.zip
+  };
+  return req.api.reporter.addReporter(reporter)
+    .then(function (result) {
+      req.$scope.reporter = result.reporter;
+      return next();
+    })
+    .catch(function (err) {
+      req.logger.error(err, 'POST /api/auth/signup');
+      return rollBack(user._id, err)
+        .then(function (result) {
+          const error = result.response.body;
+          res.status(error.httpCode).send(error);
+        })
+        .catch(function (err) {
+          const error = lib.errorResponses.internalServerError('Internal Server Error');
+          req.logger.error(err, 'POST /api/auth/signup');
+          res.status(500).send(error);
+        });
+    });
+}
+
+function appendReporterId (req, res, next) {
+  const reporter = req.$scope.reporter;
+  const user = req.$scope.newUser;
+  return req.DB.User.addReporterId(user._id, reporter._id)
+    .then(function (user) {
+      user = user.toObject();
+      delete user.password;
+      req.$scope.newUser = user;
+      next();
+    })
+    .catch(function (err) {
+      req.logger.error(err, 'POST /api/auth/signup');
+      const error = lib.errorResponses.internalServerError('Internal Server Error');
+      return rollBack(user._id, error)
+        .then(function (result) {
+          const error = result.response.body;
+          res.status(error.httpCode).send(error);
+        })
+        .catch(function (err) {
+          req.logger.error(err, 'POST /api/auth/signup');
+          res.status(500).send(error);
+        });
+    });
+}
+
 function respond (req, res) {
-  res.status(201).send({
+  const result = {
     status: 'SUCCESS',
     statusCode: 0,
     httpCode: 201,
-    user: req.$scope.newUser._id
-  });
+    user: req.$scope.newUser
+  };
+  req.logger.info(result, 'POST /api/auth/signup');
+  res.status(result.httpCode).send(result);
 }
 
 module.exports = {
@@ -199,5 +246,7 @@ module.exports = {
   checkDuplicateCredentials,
   addUserToScope,
   logic,
+  replicateUser,
+  appendReporterId,
   respond
 };

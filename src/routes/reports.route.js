@@ -6,12 +6,14 @@ const reportRoute = express.Router();
 reportRoute.get('/api/reports',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
   handlers.reports.getReports.validateParams,
   handlers.reports.getReports.logic);
 
 reportRoute.post('/api/reports',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
   handlers.reports.postReport.validateBody,
   handlers.reports.postReport.sendReport,
   handlers.reports.postReport.respond);

@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const _ = require('lodash');
 const lib = require('../lib');
+
+const USER_FIELDS = [
+  'username', 'email', 'fname', 'lname', 'alias',
+  'age', 'street', 'barangay', 'city', 'region',
+  'country', 'zip', 'hosts', 'reporterID', 'hosts'
+];
 
 const UserSchema = new Schema({
   username: { type: String },
@@ -21,10 +28,92 @@ const UserSchema = new Schema({
     _id: String,
     isOwner: Boolean,
     isAdmin: Boolean,
-    isBlocked: Boolean
+    isBlocked: Boolean,
+    createdAt: Date,
+    updatedAt: Date
   }],
-  accessLevel: { type: String, Enum: ['ADMIN', 'USER'] }
+  accessLevel: { type: String, Enum: ['ADMIN', 'USER'], default: 'USER' }
 }, { timestamps: true });
+
+/* private functions */
+
+function prepareHost (user, hostId, type) {
+  if (!user) {
+    return {
+      error: 'USER_NOT_FOUND'
+    };
+  }
+  const host = _.find(user.toObject().hosts, function (h) {
+    return h._id.toString() === hostId;
+  });
+  if (host) {
+    return {
+      error: 'HOST_ALREADY_EXISTS'
+    };
+  }
+  switch (type.toUpperCase()) {
+    case 'CREATE':
+      return {
+        error: null,
+        host: {
+          _id: hostId,
+          isOwner: true,
+          isAdmin: true,
+          isBlocked: false,
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        },
+        user: user
+      };
+    case 'REQUEST':
+      return {
+        error: null,
+        host: {
+          _id: hostId,
+          isOwner: false,
+          isAdmin: false,
+          isBlocked: true,
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        },
+        user: user
+      };
+  }
+}
+
+function addHostToUser (result) {
+  if (result.error) {
+    return result;
+  }
+  const hosts = result.user.toObject().hosts;
+  return User.findByIdAndUpdate(result.user._id, {hosts: hosts.concat([result.host])});
+}
+
+function unblockHost (user, hostId) {
+  const hosts = user.hosts;
+  const hostToUpdate = _.find(hosts, h => h._id === hostId);
+  if (!hostToUpdate) {
+    return false;
+  }
+  const updatedHost = hosts.reduce(function (p, c) {
+    if (c._id === hostId) {
+      c.isBlocked = false;
+      c.updatedAt = Date.now();
+    }
+    return p.concat([c]);
+  }, []);
+  return updatedHost;
+}
+
+function updateHosts (userId, newHosts) {
+  if (!newHosts || !Array.isArray(newHosts) || newHosts.length < 0) {
+    return Promise.resolve(false);
+  }
+  return User.findByIdAndUpdate(userId, {
+    hosts: newHosts
+  });
+}
+/* End private functions */
 
 UserSchema.statics.findByUsernameOrEmail = function (credential) {
   return User.findOne({
@@ -45,7 +134,7 @@ UserSchema.statics.checkPassword = function (_id, password) {
 UserSchema.statics.add = function (user) {
   return lib.crypto.hashAndSalt(user.password)
     .then(function (hash) {
-      const newUser = new this.model({
+      const newUser = new User({
         username: user.username,
         email: user.email,
         password: hash,
@@ -59,12 +148,57 @@ UserSchema.statics.add = function (user) {
         region: user.region,
         country: user.country,
         zip: user.zip,
-        reporterID: user.reporterID,
-        adminHosts: user.adminHosts || [],
-        memberHosts: user.memberHosts || []
+        hosts: user.hosts || []
       });
       return newUser.save();
     });
+};
+
+UserSchema.statics.addReporterId = function (userId, reporterID) {
+  return User.findByIdAndUpdate(userId, {
+    reporterID: reporterID
+  })
+    .select(USER_FIELDS.join(' '))
+    .then(function (reporter) {
+      if (!reporter) {
+        return null;
+      }
+      return User.findById(userId);
+    });
+};
+
+UserSchema.statics.appendHostToUser = function (userId, hostId) {
+  return User.findById(userId)
+    .then(user => prepareHost(user, hostId, 'CREATE'))
+    .then(addHostToUser)
+    .then(user => ({user}));
+};
+
+UserSchema.statics.requestToJoinHost = function (userId, hostId) {
+  return User.findById(userId)
+    .then(user => prepareHost(user, hostId, 'REQUEST'))
+    .then(addHostToUser)
+    .then(user => ({user}));
+};
+
+UserSchema.statics.getUserRequest = function (hostId) {
+  return User.find({
+    $and: [
+      {
+        'hosts._id': {
+          $in: [hostId]
+        }
+      },
+      { 'hosts.isOwner': false },
+      { 'hosts.isBlocked': true }
+    ]
+  });
+};
+
+UserSchema.statics.approveUserToHost = function (userId, hostId) {
+  return User.findById(userId)
+    .then(user => unblockHost(user, hostId))
+    .then(hosts => updateHosts(userId, hosts));
 };
 
 const User = mongoose.model('User', UserSchema);
