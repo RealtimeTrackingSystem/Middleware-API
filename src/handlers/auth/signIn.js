@@ -3,7 +3,7 @@
 const lib = require('../../lib');
 function logic (req, res) {
   const token = lib.crypto.encodeToken(req.user);
-  req.logger.info('POST /api/auth/signin', {
+  const result = {
     status: 'SUCCESS',
     statusCode: 0,
     httpCode: 200,
@@ -11,13 +11,9 @@ function logic (req, res) {
       user: req.user,
       token: token
     }
-  });
-  res.status(200).send({
-    status: 'SUCCESS',
-    statusCode: 0,
-    httpCode: 200,
-    token: token
-  });
+  };
+  req.logger.info(result, 'POST /api/auth/signin');
+  res.status(result.httpCode).send(result);
 }
 
 module.exports = {

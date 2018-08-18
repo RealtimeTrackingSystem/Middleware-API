@@ -52,7 +52,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
       return done(null, user);
     })
     .catch(function (err) {
-      lib.logger.error('jwt-authorization', err);
+      lib.logger.error(err, 'jwt-authorization');
       return done(err);
     });
 });

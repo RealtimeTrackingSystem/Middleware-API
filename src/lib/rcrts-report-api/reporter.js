@@ -1,18 +1,16 @@
 'use strict';
 const rp = require('request-promise');
 
-
-class Report {
+class Reporter {
   constructor (apiKey, url) {
     this.apiKey = apiKey;
     this.url = url;
-    this.report_url = this.url + '/api/reports';
+    this.reporter_url = this.url + '/api/reporters';
   }
-  getReports (tags, page, limit) {
+  getReporters (page, limit) {
     const options = {
-      uri: this.report_url,
+      uri: this.reporter_url,
       qs: {
-        tags: tags,
         page: page,
         limit: limit
       },
@@ -24,12 +22,9 @@ class Report {
     };
     return rp.get(options);
   }
-  getReportById (reportId, resources) {
+  getHostById (reporterId) {
     const options = {
-      uri: this.report_url + '/' + reportId,
-      qs: {
-        resources: resources
-      },
+      uri: this.reporter_url + '/' + reporterId,
       headers: {
         'api-key': this.apiKey,
         'content-type': 'application/json'
@@ -38,20 +33,19 @@ class Report {
     };
     return rp.get(options);
   }
-  createReport (report) {
+  addReporter (reporter) {
     const body = {
-      title: report.title,
-      description: report.description,
-      location: report.location,
-      long: report.long,
-      lat: report.lat,
-      people: report.people,
-      properties: report.properties,
-      medias: report.medias,
-      tags: report.tags
+      fname: reporter.fname,
+      lname: reporter.lname,
+      street: reporter.street,
+      barangay: reporter.barangay,
+      city: reporter.city,
+      region: reporter.region,
+      country: reporter.country,
+      zip: reporter.zip
     };
     const options = {
-      uri: this.report_url,
+      uri: this.reporter_url,
       body: body,
       headers: {
         'api-key': this.apiKey,
@@ -63,4 +57,4 @@ class Report {
   }
 }
 
-module.exports = Report;
+module.exports = Reporter;
