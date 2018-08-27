@@ -6,15 +6,17 @@ const lib = require('../lib');
 const USER_FIELDS = [
   'username', 'email', 'fname', 'lname', 'alias',
   'age', 'street', 'barangay', 'city', 'region',
-  'country', 'zip', 'hosts', 'reporterID', 'hosts'
+  'country', 'zip', 'hosts', 'reporterID', 'hosts',
+  'gender'
 ];
 
 const UserSchema = new Schema({
-  username: { type: String },
-  email: { type: String },
+  username: { type: String, required: true },
+  email: { type: String, required: true },
   password: { type: String },
   fname: { type: String },
   lname: { type: String },
+  gender: { type: String, enum: ['M', 'F'], required: true },
   alias: { type: String },
   age: { type: Number },
   street: { type: String },
@@ -140,6 +142,7 @@ UserSchema.statics.add = function (user) {
         password: hash,
         fname: user.fname,
         lname: user.lname,
+        gender: user.gender,
         alias: user.alias,
         age: user.age,
         street: user.street,

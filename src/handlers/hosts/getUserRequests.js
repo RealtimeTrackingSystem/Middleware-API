@@ -5,7 +5,7 @@ const lib = require('../../lib');
 
 function checkUserAdminship (req, res, next) {
   const user = req.user;
-  const hostId = req.params.hostId;
+  const hostId = req.params.hostId || req.$scope.hostId;
   const userHost = _.find(user.hosts, h => {
     return h._id === hostId;
   });
