@@ -57,6 +57,10 @@ function validateParams (req, res, next) {
         errorMessage: 'Invalid Parameter Length: Last Name'
       }
     },
+    gender: {
+      notEmpty: true,
+      errorMessage: 'Missing Parameter: Gender'
+    },
     alias: {
       optional: true,
       isLength: {
@@ -145,6 +149,7 @@ function addUserToScope (req, res, next) {
     password: user.password,
     fname: user.fname,
     lname: user.lname,
+    gender: user.gender,
     alias: user.alias,
     age: user.age,
     street: user.street,
@@ -213,6 +218,7 @@ function appendReporterId (req, res, next) {
       user = user.toObject();
       delete user.password;
       req.$scope.newUser = user;
+      req.$scope.token = lib.crypto.encodeToken(user);
       next();
     })
     .catch(function (err) {
@@ -235,7 +241,8 @@ function respond (req, res) {
     status: 'SUCCESS',
     statusCode: 0,
     httpCode: 201,
-    user: req.$scope.newUser
+    user: req.$scope.newUser,
+    token: req.$scope.token
   };
   req.logger.info(result, 'POST /api/auth/signup');
   res.status(result.httpCode).send(result);

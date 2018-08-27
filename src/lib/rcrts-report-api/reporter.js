@@ -22,7 +22,7 @@ class Reporter {
     };
     return rp.get(options);
   }
-  getHostById (reporterId) {
+  getReporterById (reporterId) {
     const options = {
       uri: this.reporter_url + '/' + reporterId,
       headers: {

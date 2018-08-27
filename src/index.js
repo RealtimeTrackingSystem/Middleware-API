@@ -16,6 +16,10 @@ const CONFIG = require('./config');
 const lib = require('./lib');
 const Api = require('./lib/rcrts-report-api');
 
+const os = require( 'os' );
+
+const networkInterfaces = os.networkInterfaces();
+
 // loading .env file for non production env
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
@@ -48,7 +52,7 @@ app.use(session({
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
@@ -81,6 +85,7 @@ routes(app);
 
 // listen for requests
 app.listen(PORT, () => {
+  console.log( networkInterfaces );
   console.log(`Now listening on port ${PORT}`);
 });
 

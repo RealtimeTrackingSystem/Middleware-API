@@ -55,4 +55,16 @@ hostRoute.put('/api/hosts/requests/:hostId',
   handlers.hosts.acceptUserRequest.logic,
   handlers.hosts.acceptUserRequest.respond);
 
+hostRoute.post('/api/hosts/invites',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.hosts.sendInvites.validateBody,
+  handlers.hosts.sendInvites.addHostIdToScope,
+  handlers.hosts.getUserRequests.checkUserAdminship,
+  handlers.hosts.sendInvites.sendInvite,
+  handlers.hosts.sendInvites.populateInvite,
+  handlers.hosts.sendInvites.sendEmail,
+  handlers.hosts.sendInvites.respond);
+
 module.exports = hostRoute;
