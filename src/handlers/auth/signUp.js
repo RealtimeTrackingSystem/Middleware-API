@@ -241,8 +241,10 @@ function respond (req, res) {
     status: 'SUCCESS',
     statusCode: 0,
     httpCode: 201,
-    user: req.$scope.newUser,
-    token: req.$scope.token
+    payload: {
+      user: req.$scope.newUser,
+      token: req.$scope.token
+    }
   };
   req.logger.info(result, 'POST /api/auth/signup');
   res.status(result.httpCode).send(result);
