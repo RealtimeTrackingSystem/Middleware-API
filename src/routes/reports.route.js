@@ -18,4 +18,12 @@ reportRoute.post('/api/reports',
   handlers.reports.postReport.sendReport,
   handlers.reports.postReport.respond);
 
+reportRoute.get('/api/reports/:reportId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.getReportsById.validateParams,
+  handlers.reports.getReportsById.logic,
+  handlers.reports.getReportsById.respond);
+
 module.exports = reportRoute;
