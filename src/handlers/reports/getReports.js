@@ -29,7 +29,7 @@ function validateParams (req, res, next) {
 function logic (req, res) {
   const tags = req.query.tags;
   const page = req.query.page;
-  const limit = req.query.limt;
+  const limit = req.query.limit;
   return req.api.report.getReports(tags, page, limit)
     .then(function (response) {
       const success = {
@@ -39,6 +39,7 @@ function logic (req, res) {
       };
       req.logger.info(success, 'GET /api/reports');
       success.reports = response.reports;
+      success.count = response.count;
       res.status(200).send(success);
     })
     .catch(function (error) {
