@@ -29,6 +29,7 @@ const localLogin = new LocalStrategy(localOptions, function (loginName, password
   const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName).select('-password');
   return Promise.all([checkUserWithoutPw, checkPassword])
     .then(function ([userWOP, isMatch]) {
+      console.log('\n\n\n\n\n', userWOP, isMatch);
       if (!isMatch) {
         return done(null, false);
       }
