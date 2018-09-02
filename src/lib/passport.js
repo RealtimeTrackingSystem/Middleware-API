@@ -24,15 +24,30 @@ const localLogin = new LocalStrategy(localOptions, function (loginName, password
     }
   });
   const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName);
-  return Promise.all([checkUserWithoutPw, checkPassword])
-    .then(function ([userWOP, isMatch]) {
-      console.log('\n\n\n\n\nhey', userWOP, isMatch);
+  // return Promise.all([checkUserWithoutPw, checkPassword])
+  //   .then(function ([userWOP, isMatch]) {
+  //     console.log('\n\n\n\n\nhey', userWOP, isMatch);
+  //     if (!isMatch) {
+  //       return done(null, false);
+  //     }
+  //     return done(null, userWOP);
+  //   })
+  //   .catch(function (err) {
+  //     console.log(err);
+  //     // lib.logger.error('signingup', err);
+  //     return done(err);
+  //   });
+  return DB.User.findByUsernameOrEmail(loginName)
+    .then(user => {
+      if (!user) {
+        return done(null, false);
+      }
+      const isMatch = lib.crypto.compareHash(password, user.password);
       if (!isMatch) {
         return done(null, false);
       }
-      return done(null, userWOP);
-    })
-    .catch(function (err) {
+      return done(null, user);
+    }).catch(function (err) {
       console.log(err);
       // lib.logger.error('signingup', err);
       return done(err);
