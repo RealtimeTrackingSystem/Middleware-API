@@ -10,10 +10,13 @@ const authRoute = express.Router();
 authRoute.post('/api/auth/signin',
   function (req, res, next) {
     console.log(req.body);
-    console.log(req);
     next();
   },
   requireSignin,
+  function (req, res, next) {
+    console.log('after passport', req.body);
+    next();
+  },
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
   handlers.auth.signIn.logic);

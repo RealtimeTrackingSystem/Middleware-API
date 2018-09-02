@@ -20,7 +20,7 @@ const localLogin = new LocalStrategy(localOptions, function (loginName, password
     if (!user) {
       return Promise.resolve(false);
     } else {
-      return lib.crypto.compareHash(password, user.password);
+      return Promise.resolve(lib.crypto.compareHash(password, user.password));
     }
   });
   const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName);
