@@ -15,11 +15,8 @@ const Promise = require('bluebird');
 
 
 const localLogin = new LocalStrategy(localOptions, function (loginName, password, done) {
-  console.log('\n\n\n\n\n', loginName, password, '\n\n\n\n');
-  console.log(DB);
   const checkUser = DB.User.findByUsernameOrEmail(loginName);
   const checkPassword = checkUser.then(function (user) {
-    console.log(user);
     if (!user) {
       return Promise.resolve(false);
     } else {
@@ -29,14 +26,15 @@ const localLogin = new LocalStrategy(localOptions, function (loginName, password
   const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName);
   return Promise.all([checkUserWithoutPw, checkPassword])
     .then(function ([userWOP, isMatch]) {
-      console.log('\n\n\n\n\n', userWOP, isMatch);
+      console.log('\n\n\n\n\nhey', userWOP, isMatch);
       if (!isMatch) {
         return done(null, false);
       }
       return done(null, userWOP);
     })
     .catch(function (err) {
-      lib.logger.error('signingup', err);
+      console.log(err);
+      // lib.logger.error('signingup', err);
       return done(err);
     });
 });
@@ -48,7 +46,6 @@ const jwtOptions = {
 
 const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   return DB.User.findById(payload._id)
-    .select('-password')
     .then(function (user) {
       if (!user) {
         return done(null, false);
@@ -56,7 +53,8 @@ const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
       return done(null, user);
     })
     .catch(function (err) {
-      lib.logger.error(err, 'jwt-authorization');
+      console.log(err);
+      // lib.logger.error(err, 'jwt-authorization');
       return done(err);
     });
 });
