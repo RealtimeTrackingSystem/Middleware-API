@@ -46,7 +46,9 @@ const localLogin = new LocalStrategy(localOptions, function (loginName, password
       if (!isMatch) {
         return done(null, false);
       }
-      return done(null, user);
+      const usr = user.toObject();
+      delete usr.password;
+      return done(null, usr);
     }).catch(function (err) {
       console.log(err);
       // lib.logger.error('signingup', err);
