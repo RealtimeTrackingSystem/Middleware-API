@@ -8,6 +8,11 @@ const requireSignin = passport.authenticate('local', { session: false });
 const authRoute = express.Router();
 
 authRoute.post('/api/auth/signin',
+  function (req, res, next) {
+    console.log(req.body);
+    console.log(req);
+    next();
+  },
   requireSignin,
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
