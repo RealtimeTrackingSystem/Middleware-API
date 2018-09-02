@@ -85,7 +85,7 @@ routes(app);
 
 // listen for requests
 app.listen(PORT, () => {
-  console.log( networkInterfaces );
+  // console.log( networkInterfaces );
   console.log(`Now listening on port ${PORT}`);
 });
 
