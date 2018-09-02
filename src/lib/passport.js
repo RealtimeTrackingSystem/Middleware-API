@@ -16,8 +16,10 @@ const Promise = require('bluebird');
 
 const localLogin = new LocalStrategy(localOptions, function (loginName, password, done) {
   console.log('\n\n\n\n\n', loginName, password, '\n\n\n\n');
+  console.log(DB);
   const checkUser = DB.User.findByUsernameOrEmail(loginName);
   const checkPassword = checkUser.then(function (user) {
+    console.log(user);
     if (!user) {
       return Promise.resolve(false);
     } else {
