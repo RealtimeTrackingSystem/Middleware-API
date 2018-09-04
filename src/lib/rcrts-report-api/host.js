@@ -35,12 +35,13 @@ class Host {
     };
     return rp.post(options);
   }
-  getHosts (page, limit) {
+  getHosts (page, limit, filter) {
     const options = {
       uri: this.host_url,
       qs: {
         page: page,
-        limit: limit
+        limit: limit,
+        filter: filter
       },
       headers: {
         'api-key': this.apiKey,
