@@ -13,6 +13,9 @@ function validateQuery (req, res, next) {
       isInt: {
         errorMessage: 'Invalid Parameter: Page'
       }
+    },
+    filter: {
+      optional: true
     }
   };
   req.checkQuery(schema);
@@ -30,7 +33,8 @@ function validateQuery (req, res, next) {
 function logic (req, res, next) {
   const page = req.query.page || 0;
   const limit = req.query.limit || 30;
-  return req.api.host.getHosts(page, limit)
+  const filter = req.query.filter || null;
+  return req.api.host.getHosts(page, limit, filter)
     .then(function (result) {
       req.$scope.result = result;
       next();

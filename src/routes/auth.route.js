@@ -22,4 +22,10 @@ authRoute.post('/api/auth/signup',
   handlers.auth.signUp.appendReporterId,
   handlers.auth.signUp.respond);
 
+authRoute.get('/api/auth/rehydrate',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.signIn.rehydrateCredentials);
+
 module.exports = authRoute;
