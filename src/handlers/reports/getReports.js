@@ -30,7 +30,8 @@ function logic (req, res) {
   const tags = req.query.tags;
   const page = req.query.page;
   const limit = req.query.limit;
-  return req.api.report.getReports(tags, page, limit)
+  const resources = req.query.resources;
+  return req.api.report.getReports(tags, page, limit, resources)
     .then(function (response) {
       const success = {
         status: 'SUCCESS',
