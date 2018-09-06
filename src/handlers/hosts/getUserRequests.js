@@ -29,7 +29,9 @@ function checkUserAdminship (req, res, next) {
 
 function getUsers (req, res, next) {
   const hostId = req.params.hostId;
-  return req.DB.User.getUserRequest(hostId)
+  const page = req.query.page || 0;
+  const limit = req.query.limit || 10;
+  return req.DB.User.getUserRequest(hostId, page, limit)
     .then(function (users){
       const trimmedUsers =  users.map(u => ({
         accessLevel: u.accessLevel,
@@ -45,9 +47,15 @@ function getUsers (req, res, next) {
         region: u.region,
         country: u.country,
         zip: u.zip,
-        reporterID: u.reporterID
+        reporterID: u.reporterID,
+        createdAt: u.cratedAt,
+        updatedAt: u.updatedAt
       }));
       req.$scope.users = trimmedUsers;
+      return req.DB.User.getUserRequestCount(hostId);
+    })
+    .then(function (count) {
+      req.$scope.count = count;
       next();
     })
     .catch(function (err) {
@@ -62,7 +70,8 @@ function respond (req, res) {
     status: 'SUCCESS',
     statusCode: 0,
     httpCode: 200,
-    users: req.$scope.users
+    users: req.$scope.users,
+    count: req.$scope.count
   };
   req.logger.info(response, 'GET /api/hosts/requests/:hostsId');
   res.status(200).send(response);

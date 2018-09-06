@@ -184,8 +184,24 @@ UserSchema.statics.requestToJoinHost = function (userId, hostId) {
     .then(user => ({user}));
 };
 
-UserSchema.statics.getUserRequest = function (hostId) {
+UserSchema.statics.getUserRequest = function (hostId, page = 0, limit = 10) {
+  const allowedLimit = Number(limit) < 31 ? Number(limit) : 30;
+  const offset = Number(page) * allowedLimit;
   return User.find({
+    $and: [
+      {
+        'hosts._id': {
+          $in: [hostId]
+        }
+      },
+      { 'hosts.isOwner': false },
+      { 'hosts.isBlocked': true }
+    ]
+  }).skip(offset).limit(allowedLimit).sort('-createdAt');
+};
+
+UserSchema.statics.getUserRequestCount = function (hostId) {
+  return User.count({
     $and: [
       {
         'hosts._id': {
