@@ -8,13 +8,14 @@ class Report {
     this.url = url;
     this.report_url = this.url + '/api/reports';
   }
-  getReports (tags, page, limit) {
+  getReports (tags, page, limit, resources) {
     const options = {
       uri: this.report_url,
       qs: {
         tags: tags,
         page: page,
-        limit: limit
+        limit: limit,
+        resources: resources
       },
       headers: {
         'api-key': this.apiKey,
