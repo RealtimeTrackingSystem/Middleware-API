@@ -194,8 +194,12 @@ UserSchema.statics.getUserRequest = function (hostId, page = 0, limit = 10) {
           $in: [hostId]
         }
       },
-      { 'hosts.isOwner': false },
-      { 'hosts.isBlocked': true }
+      { 'hosts.isOwner':  {
+        $ne: true
+      }},
+      { 'hosts.isBlocked': {
+        $ne: false
+      }}
     ]
   }).skip(offset).limit(allowedLimit).sort('-createdAt');
 };
@@ -208,8 +212,12 @@ UserSchema.statics.getUserRequestCount = function (hostId) {
           $in: [hostId]
         }
       },
-      { 'hosts.isOwner': false },
-      { 'hosts.isBlocked': true }
+      { 'hosts.isOwner':  {
+        $ne: true
+      }},
+      { 'hosts.isBlocked': {
+        $ne: false
+      }}
     ]
   });
 };
