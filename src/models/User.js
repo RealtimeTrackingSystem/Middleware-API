@@ -194,8 +194,12 @@ UserSchema.statics.getUserRequest = function (hostId, page = 0, limit = 10) {
           $in: [hostId]
         }
       },
-      { 'hosts.isOwner': false },
-      { 'hosts.isBlocked': true }
+      { 'hosts.isOwner':  {
+        $ne: true
+      }},
+      { 'hosts.isBlocked': {
+        $ne: false
+      }}
     ]
   }).skip(offset).limit(allowedLimit).sort('-createdAt');
 };
@@ -208,13 +212,18 @@ UserSchema.statics.getUserRequestCount = function (hostId) {
           $in: [hostId]
         }
       },
-      { 'hosts.isOwner': false },
-      { 'hosts.isBlocked': true }
+      { 'hosts.isOwner':  {
+        $ne: true
+      }},
+      { 'hosts.isBlocked': {
+        $ne: false
+      }}
     ]
   });
 };
 
 UserSchema.statics.approveUserToHost = function (userId, hostId) {
+  console.log('\n\n\n\n\n', userId, '\n\n\n\n\n');
   return User.findById(userId)
     .then(user => unblockHost(user, hostId))
     .then(hosts => updateHosts(userId, hosts));
