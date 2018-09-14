@@ -49,7 +49,9 @@ class Report {
       people: report.people,
       properties: report.properties,
       medias: report.medias,
-      tags: report.tags
+      tags: report.tags,
+      reporterId: report.reporterId,
+      hostId: report.reporterId
     };
     const options = {
       uri: this.report_url,

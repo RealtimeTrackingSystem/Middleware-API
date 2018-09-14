@@ -29,7 +29,7 @@ function validateBody (req, res, next) {
     long: {
       notEmpty: true,
       errorMessage: 'Missing Parameter: Longitude',
-      isInt: {
+      isNumber: {
         options: { min: 0 },
         errorMessage: 'Invalid Parameter Length: Longitude'
       }
@@ -37,10 +37,21 @@ function validateBody (req, res, next) {
     lat: {
       notEmpty: true,
       errorMessage: 'Missing Parameter: Latitude',
-      isInt: {
+      isNumber: {
         options: { min: 0 },
         errorMessage: 'Invalid Parameter Length: Latitude'
       }
+    },
+    hostId: {
+      notEmpty: false,
+      isLength: {
+        options: { max: 255 },
+        errorMessage: 'Invalid Parameter Length: Location'
+      }
+    },
+    reporterId: {
+      notEmpty: true,
+      errorMessage: 'Missing Parameter: Reporter ID'
     },
     people: {
       optional: true,
@@ -64,7 +75,7 @@ function validateBody (req, res, next) {
       }
     },
     tags: {
-      notEmpty: true,
+      optional: true,
       errorMessage: 'Missing Parameter: Tags',
       isArray: {
         errorMessage: 'Invalid Parameter: Tags'
@@ -93,7 +104,10 @@ function sendReport (req, res, next) {
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
       req.logger.error('POST /api/reports', error);
-      return res.status(500).send(err);
+      if (error.response.body && error.response.body.httpCode) {
+        return res.status(error.response.body.httpCode).send(error.response.body);
+      }
+      res.status(500).send(err);
     });
 }
 
