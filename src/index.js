@@ -16,21 +16,19 @@ const CONFIG = require('./config');
 const lib = require('./lib');
 const Api = require('./lib/rcrts-report-api');
 
-const os = require( 'os' );
-
-const networkInterfaces = os.networkInterfaces();
-
 // loading .env file for non production env
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').load();
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   require('dotenv').load();
+// }
 
 // set up express app
 const app = express();
 const config = CONFIG[process.env.NODE_ENV || 'development'];
 
 // connect MongoDB
-mongoose.connect(config.DATABASE, { useNewUrlParser: true });
+const connectionString = 'mongodb://' + config.db.HOST + ':' + config.db.PORT + '/' + config.db.DATABASE;
+console.log('connection string: ', connectionString);
+mongoose.connect(connectionString, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
 const PORT = process.env.PORT || 3000;
@@ -71,7 +69,7 @@ app.use(validator({
 // adding req variables
 app.use(function (req, res, next) {
   req.logger = {};
-  req.api = new Api(config.REPORT_API_KEY, config.REPORT_API_URL);
+  req.api = new Api(config.REPORT_API_KEY, config.REPORT_API_URL, config.REPORT_API_PORT);
   req.logger = lib.logger;
   req.$scope = {};
   req.DB = DB;

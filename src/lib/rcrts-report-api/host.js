@@ -2,9 +2,9 @@
 const rp = require('request-promise');
 
 class Host {
-  constructor (apiKey, url) {
+  constructor (apiKey, url, port = '') {
     this.apiKey = apiKey;
-    this.url = url;
+    this.url = url + ':' + port;
     this.host_url = this.url + '/api/hosts';
   }
   createHost (host) {

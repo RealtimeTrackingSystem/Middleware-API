@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-middleware-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: mongo-middleware
+  template:
+    metadata:
+      labels:
+        component: mongo-middleware
+    spec:
+      volumes:
+        - name: mongo-middleware-storage
+          persistentVolumeClaim:
+            claimName: mongo-middleware-persistent-volume-claim
+      containers:
+        - name: mongo
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-middleware-storage
+              mountPath: /data/db
+              subPath: mongo

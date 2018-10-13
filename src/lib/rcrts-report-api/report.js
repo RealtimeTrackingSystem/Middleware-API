@@ -3,9 +3,9 @@ const rp = require('request-promise');
 
 
 class Report {
-  constructor (apiKey, url) {
+  constructor (apiKey, url, port = '') {
     this.apiKey = apiKey;
-    this.url = url;
+    this.url = url + ':' + port;
     this.report_url = this.url + '/api/reports';
   }
   getReports (tags, page, limit, resources) {

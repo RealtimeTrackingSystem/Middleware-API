@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: middleware-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: middleware-api
+  template:
+    metadata:
+      labels:
+        component: middleware-api
+    spec:
+      containers:
+        - name: middleware-api
+          image: johnhigginsavila/middleware-api:1.0.1
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: DB_HOST
+              value: mongo-middleware-cluster-ip-service
+            - name: DB_PORT
+              value: '27017'
+            - name: DATABASE
+              value: 'middlewareApiDb'
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: 'root'
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: password
+            - name: SENDGRID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sendgrid
+                  key: SENDGRID_API
+            - name: REPORT_API_KEY
+              value: 612040E530Z5P9D0B5W369Z1U038E6K9F5X183F4
+            - name: REPORT_API_URL
+              value: http://report-api-cluster-ip-service
+            - name: REPORT_API_PORT
+              value: '5000'

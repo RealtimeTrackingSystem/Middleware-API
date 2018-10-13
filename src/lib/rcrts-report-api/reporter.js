@@ -2,9 +2,9 @@
 const rp = require('request-promise');
 
 class Reporter {
-  constructor (apiKey, url) {
+  constructor (apiKey, url, port = '') {
     this.apiKey = apiKey;
-    this.url = url;
+    this.url = url + ':' + port;
     this.reporter_url = this.url + '/api/reporters';
   }
   getReporters (page, limit) {

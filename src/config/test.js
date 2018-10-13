@@ -1,5 +1,11 @@
 const CONFIG = {
-  DATABASE: 'mongodb://localhost:27017/middlewareApiDb',
+  db: {
+    HOST: process.env.DB_HOST,
+    PORT: process.env.DB_PORT,
+    DATABASE: process.env.DATABASE,
+    MONGO_INITDB_ROOT_USERNAME: process.env.MONGO_INITDB_ROOT_USERNAME,
+    MONGO_INITDB_ROOT_PASSWORD: process.env.MONGO_INITDB_ROOT_PASSWORD
+  },
   LOG: {
     env: 'dev'
   },
