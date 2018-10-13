@@ -36,7 +36,10 @@ spec:
                   name: sendgrid
                   key: SENDGRID_API
             - name: REPORT_API_KEY
-              value: 612040E530Z5P9D0B5W369Z1U038E6K9F5X183F4
+              valueFrom:
+                secretKeyRef:
+                  name: report-api
+                  key: REPORT_API_KEY
             - name: REPORT_API_URL
               value: http://report-api-cluster-ip-service
             - name: REPORT_API_PORT
