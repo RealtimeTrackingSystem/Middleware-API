@@ -7,10 +7,13 @@ function routes (app) {
       httpCode: 200,
       message: 'MIDDLEWARE API is online!'
     };
-    req.logger.info('GET /echo', success);
+    req.logger.info(success, 'GET /echo');
     res.status(200).send(success);
   });
   app.use(require('./auth.route'));
+  app.use(require('./reports.route'));
+  app.use(require('./hosts.route'));
+  app.use(require('./reporters.route'));
   app.use('*', function (req, res){
     const path = req.params['0'];
     const message = `${path} is not a valid path`;
@@ -20,7 +23,7 @@ function routes (app) {
       httpCode: 404,
       message: message
     };
-    req.logger.warn(path, error);
+    req.logger.warn(error, path);
     res.status(404).send(error);
   });
 }
