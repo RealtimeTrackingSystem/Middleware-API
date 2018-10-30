@@ -73,15 +73,13 @@ function processTags (req, res, next) {
 }
 
 function processMediaUploads (req, res, next) {
-  console.log('\n\n\n\n\n\n\n', req.files, '\n\n\n\n\n\n');
-  if (!req.files && Array.isArray(req.files) && req.files.length > 0) {
-    return next();
+  if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+    const mediaUploads = req.files.map((file) => ({
+      platform: 'cloudinary',
+      metaData: JSON.stringify(file)
+    }));
+    req.body.medias = mediaUploads;
   }
-  const mediaUploads = req.files.map((file) => ({
-    platform: 'cloudinary',
-    metaData: JSON.stringify(file)
-  }));
-  req.body.medias = mediaUploads;
   next();
 }
 
