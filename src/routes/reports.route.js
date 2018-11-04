@@ -8,6 +8,7 @@ reportRoute.get('/api/reports',
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
   handlers.reports.getReports.validateParams,
+  handlers.reports.getReports.addOtherOptions,
   handlers.reports.getReports.logic);
 
 reportRoute.post('/api/reports',
@@ -16,10 +17,12 @@ reportRoute.post('/api/reports',
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
   handlers.reports.postReport.validateBody,
+  handlers.media.uploads.destroyUploadedFiles,
   handlers.reports.postReport.processMediaUploads,
   handlers.reports.postReport.processTags,
   handlers.reports.postReport.processPeopleAndProperties,
   handlers.reports.postReport.sendReport,
+  handlers.media.uploads.destroyUploadedFiles,
   handlers.reports.postReport.respond);
 
 reportRoute.get('/api/reports/:reportId',

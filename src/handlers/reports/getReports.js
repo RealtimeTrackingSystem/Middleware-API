@@ -26,12 +26,23 @@ function validateParams (req, res, next) {
   }
 }
 
+function addOtherOptions (req, res, next) {
+  const otherOptions = {};
+  if (req.query.reporter) {
+    otherOptions.reporter = req.query.reporter;
+    req.$scope.otherOptions = otherOptions;
+  }
+
+  next();
+}
+
 function logic (req, res) {
   const tags = req.query.tags;
   const page = req.query.page;
   const limit = req.query.limit;
   const resources = req.query.resources;
-  return req.api.report.getReports(tags, page, limit, resources)
+  const otherOptions = req.$scope.otherOptions;
+  return req.api.report.getReports(tags, page, limit, resources, otherOptions)
     .then(function (response) {
       const success = {
         status: 'SUCCESS',
@@ -52,5 +63,6 @@ function logic (req, res) {
 
 module.exports = {
   validateParams,
+  addOtherOptions,
   logic
 };

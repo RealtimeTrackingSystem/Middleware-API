@@ -57,7 +57,9 @@ function validateBody (req, res, next) {
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
     req.logger.warn('POST /api/reports', errorObject);
-    return res.status(errorObject.httpCode).send(errorObject);
+    req.$scope.filesToDelete = req.files;
+    res.status(errorObject.httpCode).send(errorObject);
+    return next();
   } else {
     return next();
   }
@@ -76,7 +78,7 @@ function processMediaUploads (req, res, next) {
   if (req.files && Array.isArray(req.files) && req.files.length > 0) {
     const mediaUploads = req.files.map((file) => ({
       platform: 'cloudinary',
-      metaData: JSON.stringify(file)
+      metaData: file
     }));
     req.body.medias = mediaUploads;
   }
@@ -125,9 +127,11 @@ function sendReport (req, res, next) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
       req.logger.error('POST /api/reports', error);
       if (error.response.body && error.response.body.httpCode) {
-        return res.status(error.response.body.httpCode).send(error.response.body);
+        res.status(error.response.body.httpCode).send(error.response.body);
       }
+      req.$scope.filesToDelete = req.files;
       res.status(500).send(err);
+      next();
     });
 }
 
