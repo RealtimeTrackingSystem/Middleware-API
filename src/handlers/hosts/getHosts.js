@@ -31,8 +31,8 @@ function validateQuery (req, res, next) {
 }
 
 function logic (req, res, next) {
-  const page = req.query.page || 0;
-  const limit = req.query.limit || 30;
+  const page = req.query.page;
+  const limit = req.query.limit;
   const filter = req.query.filter || null;
   return req.api.host.getHosts(page, limit, filter)
     .then(function (result) {
