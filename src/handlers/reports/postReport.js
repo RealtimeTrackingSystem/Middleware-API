@@ -43,7 +43,8 @@ function validateBody (req, res, next) {
       }
     },
     hostId: {
-      notEmpty: false,
+      notEmpty: true,
+      errorMessage: 'Missing Parameter: Host ID',
       isLength: {
         options: { max: 255 },
         errorMessage: 'Invalid Parameter Length: Host ID'
