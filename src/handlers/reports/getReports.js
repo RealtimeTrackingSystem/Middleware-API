@@ -30,9 +30,13 @@ function addOtherOptions (req, res, next) {
   const otherOptions = {};
   if (req.query.reporter) {
     otherOptions.reporter = req.query.reporter;
-    req.$scope.otherOptions = otherOptions;
   }
 
+  if (req.query.host) {
+    otherOptions.host = req.query.host;
+  }
+
+  req.$scope.otherOptions = otherOptions;
   next();
 }
 

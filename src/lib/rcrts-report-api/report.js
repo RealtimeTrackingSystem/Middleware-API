@@ -18,6 +18,9 @@ class Report {
     if (others.reporter) {
       qs.reporter = others.reporter;
     }
+    if (others.host) {
+      qs.host = others.host;
+    }
     const options = {
       uri: this.report_url,
       qs: qs,
@@ -55,7 +58,7 @@ class Report {
       medias: report.medias,
       tags: report.tags,
       reporterId: report.reporterId,
-      hostId: report.reporterId
+      hostId: report.hostId
     };
     const options = {
       uri: this.report_url,
