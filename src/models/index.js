@@ -1,5 +1,6 @@
 
 module.exports = {
   User: require('./User'),
-  Invite: require('./Invite')
+  Invite: require('./Invite'),
+  Picture: require('./Picture')
 };

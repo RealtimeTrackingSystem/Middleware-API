@@ -34,7 +34,8 @@ const UserSchema = new Schema({
     createdAt: Date,
     updatedAt: Date
   }],
-  accessLevel: { type: String, Enum: ['ADMIN', 'USER'], default: 'USER' }
+  accessLevel: { type: String, Enum: ['ADMIN', 'HOST', 'USER'], default: 'USER' },
+  profilePicture: { type: Schema.Types.ObjectId, ref: 'Picture' }
 }, { timestamps: true });
 
 /* private functions */
