@@ -71,6 +71,19 @@ class Report {
     };
     return rp.post(options);
   }
+  putReportStatus (reportId, status) {
+    const body = { status };
+    const options = {
+      uri: this.report_url + '/status' + '/' + reportId,
+      body: body,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
+  }
 }
 
 module.exports = Report;

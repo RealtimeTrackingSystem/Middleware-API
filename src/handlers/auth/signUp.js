@@ -201,6 +201,7 @@ function replicateUser (req, res, next) {
     fname: user.fname,
     lname: user.lname,
     email: user.email,
+    gender: user.gender,
     alias: user.alias,
     street: user.street,
     barangay: user.barangay,

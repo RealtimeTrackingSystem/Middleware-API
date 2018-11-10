@@ -25,6 +25,22 @@ reportRoute.post('/api/reports',
   handlers.media.uploads.destroyUploadedFiles,
   handlers.reports.postReport.respond);
 
+reportRoute.put('/api/reports/status/:reportId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.authentication.adminOnly,
+  handlers.reports.putReportStatus.validateBody,
+  handlers.reports.putReportStatus.logic,
+  handlers.reports.putReportStatus.respond);
+
+reportRoute.delete('/api/reports/status/:reportId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.putReportStatus.setToVoid,
+  handlers.reports.putReportStatus.respond);
+
 reportRoute.get('/api/reports/:reportId',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
