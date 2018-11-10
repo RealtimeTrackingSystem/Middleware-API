@@ -28,4 +28,19 @@ authRoute.get('/api/auth/rehydrate',
   handlers.auth.authentication.logActivity,
   handlers.auth.signIn.rehydrateCredentials);
 
+authRoute.put('/api/auth/password',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.updatePassword.validateBody,
+  handlers.auth.updatePassword.logic,
+  handlers.auth.updatePassword.respond);
+
+authRoute.delete('/api/auth/password',
+  handlers.auth.forgotPassword.validateBody,
+  handlers.auth.forgotPassword.checkUserEmail,
+  handlers.auth.forgotPassword.logic,
+  handlers.auth.forgotPassword.sendEmail,
+  handlers.auth.forgotPassword.respond);
+
 module.exports = authRoute;

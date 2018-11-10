@@ -37,6 +37,9 @@ class Reporter {
     const body = {
       fname: reporter.fname,
       lname: reporter.lname,
+      email: reporter.email,
+      gender: reporter.gender,
+      alias: reporter.alias,
       street: reporter.street,
       barangay: reporter.barangay,
       city: reporter.city,

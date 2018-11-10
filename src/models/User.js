@@ -229,6 +229,46 @@ UserSchema.statics.approveUserToHost = function (userId, hostId) {
     .then(hosts => updateHosts(userId, hosts));
 };
 
+UserSchema.statics.forgotPassword = function (userId) {
+  let tempPass = lib.crypto.codeGenerator('*+#+', 10).join('');
+  return lib.crypto.hashAndSalt(tempPass)
+    .then(function (hashedPass) {
+      return User.findByIdAndUpdate(userId, {
+        password: hashedPass
+      });
+    })
+    .then(function (user) {
+      return {
+        user,
+        temporaryPassword: tempPass
+      };
+    });
+};
+
+UserSchema.statics.updatePassword = function (userId, oldPassword, newPassword) {
+  return User.findById(userId)
+    .then(function (user) {
+      return lib.crypto.compareHash(oldPassword, user.password);
+    })
+    .then(function (isMatch) {
+      if (!isMatch) {
+        throw {
+          success: false,
+          reason: 'Invalid Parameter: Old Password'
+        };
+      }
+      return lib.crypto.hashAndSalt(newPassword);
+    })
+    .then(function (hashedPass) {
+      return User.findByIdAndUpdate(userId, {
+        password: hashedPass
+      });
+    })
+    .then(function (user) {
+      return user;
+    });
+};
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

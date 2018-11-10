@@ -70,6 +70,7 @@ app.use(validator({
 app.use(function (req, res, next) {
   req.logger = {};
   req.api = new Api(config.REPORT_API_KEY, config.REPORT_API_URL, config.REPORT_API_PORT);
+  req.mailer = lib.mailer;
   req.logger = lib.logger;
   req.$scope = {};
   req.DB = DB;
