@@ -14,7 +14,7 @@ function validateParams (req, res, next) {
       notEmpty: true,
       errorMessage: 'Missing Parameter: Username',
       isLength: {
-        options: { min: 6, max: 20 },
+        options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: Username'
       }
     },
@@ -78,7 +78,7 @@ function validateParams (req, res, next) {
     barangay: {
       optional: true,
       isLength: {
-        options: { min: 4, max: 20 },
+        options: { min: 2, max: 20 },
         errorMessage: 'Invalid Parameter Length: Barangay'
       }
     },
@@ -141,6 +141,23 @@ function checkDuplicateCredentials (req, res, next) {
     });
 }
 
+function addPhotoToScope (req, res, next) {
+  if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+    const pictureData = {
+      platform: 'cloudinary',
+      metaData: req.files[0]
+    };
+    req.$scope.pictureData = pictureData;
+    return req.DB.Picture.add(pictureData)
+      .then(function (picture) {
+        req.$scope.picture = picture;
+        next();
+      });
+  } else {
+    next();
+  }
+}
+
 function addUserToScope (req, res, next) {
   const user = req.body;
   req.$scope.user = {
@@ -183,6 +200,8 @@ function replicateUser (req, res, next) {
   const reporter = {
     fname: user.fname,
     lname: user.lname,
+    email: user.email,
+    alias: user.alias,
     street: user.street,
     barangay: user.barangay,
     city: user.city,
@@ -253,6 +272,7 @@ function respond (req, res) {
 module.exports = {
   validateParams,
   checkDuplicateCredentials,
+  addPhotoToScope,
   addUserToScope,
   logic,
   replicateUser,

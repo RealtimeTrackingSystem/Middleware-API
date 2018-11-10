@@ -138,7 +138,7 @@ function sendReport (req, res, next) {
 
 function respond (req, res) {
   const report = req.$scope.report;
-  req.logger.info('POST /api/reports', report);
+  req.logger.info(report, 'POST /api/reports');
   res.status(201).send({
     status: 'SUCCESS',
     statusCode: 0,
