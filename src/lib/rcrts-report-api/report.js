@@ -84,6 +84,38 @@ class Report {
     };
     return rp.put(options);
   }
+  searchReport (searchString, page, limit, resources) {
+    let qs = {
+      page: page,
+      limit: limit,
+      resources: resources
+    };
+
+    const options = {
+      uri: this.report_url + '/search' + '/' + searchString,
+      qs: qs,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.get(options);
+  }
+  duplicateReport (duplicates)  {
+    const options = {
+      uri: this.report_url + '/duplicates',
+      body: {
+        duplicates: duplicates
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
 }
 
 module.exports = Report;

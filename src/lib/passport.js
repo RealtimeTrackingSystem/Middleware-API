@@ -23,7 +23,7 @@ const localLogin = new LocalStrategy(localOptions, function (loginName, password
       return lib.crypto.compareHash(password, user.password);
     }
   });
-  const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName).select('-password');
+  const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName).populate('hosts').select('-password');
   return Promise.all([checkUserWithoutPw, checkPassword])
     .then(function ([userWOP, isMatch]) {
       if (!isMatch) {
@@ -44,6 +44,7 @@ const jwtOptions = {
 
 const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   return DB.User.findById(payload._id)
+    .populate('hosts')
     .select('-password')
     .then(function (user) {
       if (!user) {

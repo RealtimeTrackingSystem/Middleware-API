@@ -3,6 +3,22 @@ const handlers = require('../handlers');
 
 const reportRoute = express.Router();
 
+reportRoute.get('/api/reports/search/:searchString',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.searchReports.validateParams,
+  handlers.reports.searchReports.validateQuery,
+  handlers.reports.searchReports.logic);
+
+reportRoute.post('/api/reports/duplicates',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.authentication.checkHostAdminship,
+  handlers.reports.postDuplicate.validateParams,
+  handlers.reports.postDuplicate.logic);
+
 reportRoute.get('/api/reports',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
@@ -29,7 +45,7 @@ reportRoute.put('/api/reports/status/:reportId',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
-  handlers.auth.authentication.adminOnly,
+  handlers.auth.authentication.checkHostAdminship,
   handlers.reports.putReportStatus.validateBody,
   handlers.reports.putReportStatus.logic,
   handlers.reports.putReportStatus.respond);
