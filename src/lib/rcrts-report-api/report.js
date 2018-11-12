@@ -102,11 +102,27 @@ class Report {
     };
     return rp.get(options);
   }
-  duplicateReport (duplicates)  {
+  duplicateReport (duplicates) {
     const options = {
       uri: this.report_url + '/duplicates',
       body: {
         duplicates: duplicates
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
+  massStatusUpdate (reportUpdates) {
+    // reportUpdates is an array of
+    // { reportId: '', status: '' }
+    const options = {
+      uri: this.report_url + '/mass-update-status',
+      body: {
+        reportUpdates: reportUpdates
       },
       headers: {
         'api-key': this.apiKey,

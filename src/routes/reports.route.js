@@ -3,6 +3,14 @@ const handlers = require('../handlers');
 
 const reportRoute = express.Router();
 
+reportRoute.post('/api/v1/reports/mass-update-status',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.authentication.checkHostAdminship,
+  handlers.reports.massStatusUpdate.validateParams,
+  handlers.reports.massStatusUpdate.logic);
+
 reportRoute.get('/api/reports/search/:searchString',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
