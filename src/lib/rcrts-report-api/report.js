@@ -59,7 +59,8 @@ class Report {
       tags: report.tags,
       reporterId: report.reporterId,
       hostId: report.hostId,
-      category: report.category
+      category: report.category,
+      urgency: report.urgency
     };
     const options = {
       uri: this.report_url,
