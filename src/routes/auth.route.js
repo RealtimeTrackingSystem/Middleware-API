@@ -36,7 +36,7 @@ authRoute.put('/api/auth/password',
   handlers.auth.updatePassword.logic,
   handlers.auth.updatePassword.respond);
 
-authRoute.delete('/api/auth/password',
+authRoute.post('/api/auth/password',
   handlers.auth.forgotPassword.validateBody,
   handlers.auth.forgotPassword.checkUserEmail,
   handlers.auth.forgotPassword.logic,
