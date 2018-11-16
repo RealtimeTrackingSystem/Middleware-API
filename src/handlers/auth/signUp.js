@@ -57,6 +57,15 @@ function validateParams (req, res, next) {
         errorMessage: 'Invalid Parameter Length: Last Name'
       }
     },
+    age: {
+      notEmpty: true,
+      errorMessage: 'Missing Parameter: Age',
+      isInt: {
+        options: { min: 16 },
+        errorMessage: 'Invalid Parameter: Age - Must be 16 +'
+      },
+      toInt: true
+    },
     gender: {
       notEmpty: true,
       errorMessage: 'Missing Parameter: Gender'
@@ -198,17 +207,18 @@ function logic (req, res, next) {
 function replicateUser (req, res, next) {
   const user = req.$scope.newUser;
   const reporter = {
-    fname: user.fname,
-    lname: user.lname,
-    email: user.email,
-    gender: user.gender,
-    alias: user.alias,
-    street: user.street,
-    barangay: user.barangay,
-    city: user.city,
-    region: user.region,
-    country: user.country,
-    zip: user.zip
+    fname: reporter.fname,
+    lname: reporter.lname,
+    email: reporter.email,
+    age: reporter.age,
+    gender: reporter.gender,
+    alias: reporter.alias,
+    street: reporter.street,
+    barangay: reporter.barangay,
+    city: reporter.city,
+    region: reporter.region,
+    country: reporter.country,
+    zip: reporter.zip
   };
   return req.api.reporter.addReporter(reporter)
     .then(function (result) {
