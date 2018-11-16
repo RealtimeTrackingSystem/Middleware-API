@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const PictureSchema = new Schema({
-  platform: { type: String, required: true },
-  metaData: { type: Object, required: true }
+  platform: { type: String, required: true, index: true  },
+  metaData: { type: Object, required: true, index: true  }
 }, { timestamps: true });
 
 PictureSchema.statics.hydrate = function (picture) {

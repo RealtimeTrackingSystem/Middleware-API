@@ -4,5 +4,6 @@ module.exports = {
   authentication: require('./authentication'),
   forgotPassword: require('./forgotPassword'),
   updatePassword: require('./updatePassword'),
-  updateUser: require('./updateUser')
+  updateUser: require('./updateUser'),
+  updateProfilePic: require('./updateProfilePic')
 };
