@@ -184,7 +184,7 @@ function replicateChanges (req, res, next) {
   const reporterID = req.user.reporterID;
   const reporter = body;
   reporter.reporterID = reporterID;
-  return req.api.updateReporter(reporter)
+  return req.api.reporter.updateReporter(reporter)
     .then((result) => {
       req.$scope.reporter = result.reporter;
       return next();

@@ -6,6 +6,7 @@ const requireAuth = passport.authenticate('jwt', {session: false, failWithError:
 
 
 function authenticate (err, req, res, next) {
+  console.log(err);
   if (err) {
     const error = {
       status: 'ERROR',

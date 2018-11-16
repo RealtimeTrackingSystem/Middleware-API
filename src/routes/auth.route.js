@@ -52,4 +52,14 @@ authRoute.put('/api/auth/user',
   handlers.auth.updateUser.replicateChanges,
   handlers.auth.updateUser.respond);
 
+authRoute.put('/api/auth/profilepic',
+  handlers.media.uploads.multipleUpload('profilepic', 1, 'profilepics'),
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.updateProfilePic.checkProfilePic,
+  handlers.auth.updateProfilePic.logic,
+  handlers.auth.updateProfilePic.replicateReporter,
+  handlers.auth.updateProfilePic.respond);
+
 module.exports = authRoute;

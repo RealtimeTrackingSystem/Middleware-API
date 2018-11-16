@@ -11,21 +11,21 @@ const USER_FIELDS = [
 ];
 
 const UserSchema = new Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String },
-  fname: { type: String },
-  lname: { type: String },
-  gender: { type: String, enum: ['M', 'F'], required: true },
-  alias: { type: String },
-  age: { type: Number },
-  street: { type: String },
-  barangay: { type: String },
-  city: { type: String },
-  region: { type: String },
-  country: { type: String },
-  zip: { type: String },
-  reporterID: { type: String },
+  username: { type: String, required: true, index: true },
+  email: { type: String, required: true, index: true  },
+  password: { type: String, index: true  },
+  fname: { type: String, index: true  },
+  lname: { type: String, index: true  },
+  gender: { type: String, enum: ['M', 'F'], required: true, index: true  },
+  alias: { type: String, index: true  },
+  age: { type: Number, index: true  },
+  street: { type: String, index: true  },
+  barangay: { type: String, index: true  },
+  city: { type: String, index: true  },
+  region: { type: String, index: true  },
+  country: { type: String, index: true  },
+  zip: { type: String, index: true  },
+  reporterID: { type: String, index: true  },
   hosts: [{
     _id: String,
     isOwner: Boolean,
@@ -34,8 +34,8 @@ const UserSchema = new Schema({
     createdAt: Date,
     updatedAt: Date
   }],
-  accessLevel: { type: String, Enum: ['ADMIN', 'HOST', 'USER'], default: 'USER' },
-  profilePicture: { type: Schema.Types.ObjectId, ref: 'Picture' }
+  accessLevel: { type: String, Enum: ['ADMIN', 'HOST', 'USER'], default: 'USER', index: true  },
+  profilePicture: { type: Schema.Types.ObjectId, ref: 'Picture', index: true  }
 }, { timestamps: true });
 
 /* private functions */

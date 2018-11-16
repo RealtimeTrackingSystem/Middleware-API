@@ -85,6 +85,21 @@ class Reporter {
     };
     return rp.put(options);
   }
+  updateReporterProfilePic (reporterId, file) {
+    const body = {
+      file: file
+    };
+    const options = {
+      uri: this.reporter_url + '/profilepic/' + reporterId,
+      body: body,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
+  }
 }
 
 module.exports = Reporter;
