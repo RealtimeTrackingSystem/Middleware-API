@@ -48,6 +48,7 @@ const jwtOptions = {
 const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   return DB.User.findById(payload._id)
     .populate('hosts')
+    .populate('profilePicture')
     .select('-password')
     .then(function (user) {
       if (!user) {
