@@ -23,7 +23,10 @@ const localLogin = new LocalStrategy(localOptions, function (loginName, password
       return lib.crypto.compareHash(password, user.password);
     }
   });
-  const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName).populate('hosts').select('-password');
+  const checkUserWithoutPw = DB.User.findByUsernameOrEmail(loginName)
+    .populate('hosts')
+    .populate('profilePicture')
+    .select('-password');
   return Promise.all([checkUserWithoutPw, checkPassword])
     .then(function ([userWOP, isMatch]) {
       if (!isMatch) {
