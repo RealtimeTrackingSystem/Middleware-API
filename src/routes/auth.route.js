@@ -43,4 +43,13 @@ authRoute.post('/api/auth/password',
   handlers.auth.forgotPassword.sendEmail,
   handlers.auth.forgotPassword.respond);
 
+authRoute.put('/api/auth/user',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.updateUser.validateBody,
+  handlers.auth.updateUser.logic,
+  handlers.auth.updateUser.replicateChanges,
+  handlers.auth.updateUser.respond);
+
 module.exports = authRoute;

@@ -38,6 +38,7 @@ class Reporter {
       fname: reporter.fname,
       lname: reporter.lname,
       email: reporter.email,
+      age: reporter.age,
       gender: reporter.gender,
       alias: reporter.alias,
       street: reporter.street,
@@ -57,6 +58,32 @@ class Reporter {
       json: true
     };
     return rp.post(options);
+  }
+  updateReporter (reporter) {
+    const body = {
+      fname: reporter.fname,
+      lname: reporter.lname,
+      email: reporter.email,
+      age: reporter.age,
+      gender: reporter.gender,
+      alias: reporter.alias,
+      street: reporter.street,
+      barangay: reporter.barangay,
+      city: reporter.city,
+      region: reporter.region,
+      country: reporter.country,
+      zip: reporter.zip
+    };
+    const options = {
+      uri: this.reporter_url + '/' + reporter.reporterID,
+      body: body,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
   }
 }
 
