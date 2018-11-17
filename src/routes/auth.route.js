@@ -48,6 +48,7 @@ authRoute.put('/api/auth/user',
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
   handlers.auth.updateUser.validateBody,
+  handlers.auth.updateUser.validateUsernameAndEmail,
   handlers.auth.updateUser.logic,
   handlers.auth.updateUser.replicateChanges,
   handlers.auth.updateUser.respond);
