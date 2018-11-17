@@ -11,8 +11,8 @@ const USER_FIELDS = [
 ];
 
 const UserSchema = new Schema({
-  username: { type: String, required: true, index: true },
-  email: { type: String, required: true, index: true  },
+  username: { type: String, required: true, index: true, unique: true },
+  email: { type: String, required: true, index: true, unique: true  },
   password: { type: String, index: true  },
   fname: { type: String, index: true  },
   lname: { type: String, index: true  },

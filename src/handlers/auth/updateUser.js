@@ -153,6 +153,45 @@ function validateBody (req, res, next) {
   }
 }
 
+function validateUsernameAndEmail (req, res, next) {
+  const { email, username } = req.body;
+  const user = req.user;
+  if (email == user.email && username == user.username) {
+    return next();
+  }
+  
+  return Promise.all(
+    req.DB.User.findOne({ username: username }),
+    req.DB.User.findOne({ email: email })
+  )
+    .then(([userByUsername, userByEmail]) => {
+      let error;
+      if (userByUsername && username != user.username) {
+        error = {
+          status: 'ERROR',
+          statusCode: 3,
+          httpCode: 400,
+          message: 'Invalid Parameter Username - Already in used'
+        };
+      }
+
+      if (userByEmail && email != user.email) {
+        error = {
+          status: 'ERROR',
+          statusCode: 3,
+          httpCode: 400,
+          message: 'Invalid Parameter Email - Already in used'
+        };
+      }
+
+      if (error) {
+        return res.status(error.httpCode).send(error);
+      }
+      next();
+    })
+    .catch(err => internals.catchError(err, req, res));
+}
+
 function updateUser (req, res, next) {
   const userId = req.user._id;
   const userData = req.body;
@@ -204,6 +243,7 @@ function respond (req, res) {
 
 module.exports = {
   validateBody,
+  validateUsernameAndEmail,
   logic: updateUser,
   replicateChanges,
   respond
