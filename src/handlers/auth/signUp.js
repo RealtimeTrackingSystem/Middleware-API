@@ -207,18 +207,18 @@ function logic (req, res, next) {
 function replicateUser (req, res, next) {
   const user = req.$scope.newUser;
   const reporter = {
-    fname: reporter.fname,
-    lname: reporter.lname,
-    email: reporter.email,
-    age: reporter.age,
-    gender: reporter.gender,
-    alias: reporter.alias,
-    street: reporter.street,
-    barangay: reporter.barangay,
-    city: reporter.city,
-    region: reporter.region,
-    country: reporter.country,
-    zip: reporter.zip
+    fname: user.fname,
+    lname: user.lname,
+    email: user.email,
+    age: user.age,
+    gender: user.gender,
+    alias: user.alias,
+    street: user.street,
+    barangay: user.barangay,
+    city: user.city,
+    region: user.region,
+    country: user.country,
+    zip: user.zip
   };
   return req.api.reporter.addReporter(reporter)
     .then(function (result) {
