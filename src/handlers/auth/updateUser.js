@@ -1,5 +1,6 @@
 const lib = require('../../lib');
 const internals = {};
+const Promise = require('bluebird');
 internals.catchError = (error, req, res) => {
   const err = {
     status: 'ERROR',
@@ -160,10 +161,10 @@ function validateUsernameAndEmail (req, res, next) {
     return next();
   }
   
-  return Promise.all(
+  return Promise.all([
     req.DB.User.findOne({ username: username }),
     req.DB.User.findOne({ email: email })
-  )
+  ])
     .then(([userByUsername, userByEmail]) => {
       let error;
       if (userByUsername && username != user.username) {
