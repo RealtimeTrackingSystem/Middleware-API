@@ -3,6 +3,15 @@ const handlers = require('../handlers');
 
 const hostRoute = express.Router();
 
+hostRoute.put('/api/hosts/approval/:hostId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.authentication.checkUserAdminship,
+  handlers.hosts.acceptNewHost.logic,
+  handlers.hosts.acceptNewHost.respond);
+
+
 hostRoute.get('/api/hosts',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
@@ -32,7 +41,6 @@ hostRoute.get('/api/hosts/requests/:hostId',
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
   handlers.hosts.sendUserRequest.checkHost,
-  handlers.hosts.getUserRequests.checkUserAdminship,
   handlers.hosts.getUserRequests.getUsers,
   handlers.hosts.getUserRequests.respond);
 
@@ -49,7 +57,7 @@ hostRoute.put('/api/hosts/requests/:hostId',
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
   handlers.hosts.sendUserRequest.checkHost,
-  handlers.hosts.getUserRequests.checkUserAdminship,
+  handlers.hosts.getUserRequests.checkHostAdminship,
   handlers.hosts.acceptUserRequest.validateBody,
   handlers.hosts.acceptUserRequest.checkUser,
   handlers.hosts.acceptUserRequest.logic,
@@ -61,7 +69,7 @@ hostRoute.post('/api/hosts/invites',
   handlers.auth.authentication.logActivity,
   handlers.hosts.sendInvites.validateBody,
   handlers.hosts.sendInvites.addHostIdToScope,
-  handlers.hosts.getUserRequests.checkUserAdminship,
+  handlers.hosts.getUserRequests.checkHostAdminship,
   handlers.hosts.sendInvites.sendInvite,
   handlers.hosts.sendInvites.populateInvite,
   handlers.hosts.sendInvites.sendEmail,

@@ -5,5 +5,6 @@ module.exports = {
   sendInvites: require('./sendInvites'),
   getUserRequests: require('./getUserRequests'),
   sendUserRequest: require('./sendHostRequest'),
-  acceptUserRequest: require('./acceptUserRequest')
+  acceptUserRequest: require('./acceptUserRequest'),
+  acceptNewHost: require('./acceptNewHost')
 };
