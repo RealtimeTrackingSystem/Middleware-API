@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const lib = require('../../lib');
 
-function checkUserAdminship (req, res, next) {
+function checkHostAdminship (req, res, next) {
   const user = req.user;
   const hostId = req.params.hostId || req.$scope.hostId;
   const userHost = _.find(user.hosts, h => {
@@ -78,7 +78,7 @@ function respond (req, res) {
 }
 
 module.exports = {
-  checkUserAdminship,
+  checkHostAdminship,
   getUsers,
   respond
 };

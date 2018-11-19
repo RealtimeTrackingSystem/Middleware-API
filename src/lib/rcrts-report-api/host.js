@@ -68,6 +68,17 @@ class Host {
     };
     return rp.get(options);
   }
+  approveHost (hostId) {
+    const options = {
+      uri: this.host_url + '/approval/' + hostId,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
+  }
 }
 
 module.exports = Host;
