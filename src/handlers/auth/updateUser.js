@@ -197,6 +197,7 @@ function updateUser (req, res, next) {
   const userId = req.user._id;
   const userData = req.body;
   const body = {
+    username: userData.username,
     fname: userData.fname,
     lname: userData.lname,
     email: userData.email,
