@@ -73,8 +73,8 @@ class Report {
     };
     return rp.post(options);
   }
-  putReportStatus (reportId, status) {
-    const body = { status };
+  putReportStatus (reportId, status, note) {
+    const body = { status, note };
     const options = {
       uri: this.report_url + '/status' + '/' + reportId,
       body: body,

@@ -5,6 +5,10 @@ function validateBody (req, res, next) {
     status: {
       notEmpty: true,
       errorMessage: 'Missing Parameter: Status'
+    },
+    note: {
+      notEmpty: true,
+      errorMessage: 'Missing Parameter: Note'
     }
   };
   req.checkBody(schema);
@@ -40,9 +44,9 @@ function setToVoid (req, res, next) {
 }
 
 function logic (req, res, next) {
-  const status = req.body.status;
+  const { status, note } = req.body;
   const reportId = req.params.reportId;
-  return req.api.report.putReportStatus(reportId, status.ToUpperCase())
+  return req.api.report.putReportStatus(reportId, status.toUpperCase(), note)
     .then(function (response) {
       req.$scope.response = response;
       next();
