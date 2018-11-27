@@ -23,7 +23,7 @@ function validateParams (req, res, next) {
 
 function logic (req, res) {
   const duplicates = req.body.duplicates;
-  return req.api.report.duplicateReport(duplicates)
+  return req.api.report.bulkDuplicateReport(duplicates)
     .then(function (response) {
       req.logger.info(response, 'POST /api/reports/duplicates');
       res.status(201).send({
