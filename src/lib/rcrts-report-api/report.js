@@ -104,9 +104,9 @@ class Report {
     };
     return rp.get(options);
   }
-  duplicateReport (duplicates) {
+  bulkDuplicateReport (duplicates) {
     const options = {
-      uri: this.report_url + '/duplicates',
+      uri: this.report_url + '/duplicates/bulk',
       body: {
         duplicates: duplicates
       },
@@ -125,6 +125,35 @@ class Report {
       uri: this.report_url + '/mass-update-status',
       body: {
         reportUpdates: reportUpdates
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
+  getDuplicates (isDuplicate = true) {
+    const options = {
+      uri: this.report_url + '/duplicates',
+      qs: {
+        isDuplicate: isDuplicate
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.get(options);
+  }
+  duplicateReport (parentReport, duplicateReport) {
+    const options = {
+      uri: this.report_url + '/duplicates',
+      body: {
+        duplicate: duplicateReport,
+        parentDuplicate: parentReport
       },
       headers: {
         'api-key': this.apiKey,
