@@ -27,6 +27,13 @@ reportRoute.post('/api/reports/duplicates',
   handlers.reports.postDuplicate.validateParams,
   handlers.reports.postDuplicate.logic);
 
+reportRoute.get('/api/reports/duplicates',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.getDuplicateReports.logic,
+  handlers.reports.getDuplicateReports.respond);
+
 reportRoute.get('/api/reports',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
