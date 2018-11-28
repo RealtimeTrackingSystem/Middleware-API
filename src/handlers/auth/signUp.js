@@ -1,5 +1,6 @@
 const lib = require('../../lib');
 const DB = require('../../models');
+const moment = require('moment');
 
 function rollBack (userId, err) {
   return DB.User.findByIdAndRemove(userId)
@@ -57,14 +58,9 @@ function validateParams (req, res, next) {
         errorMessage: 'Invalid Parameter Length: Last Name'
       }
     },
-    age: {
+    birthday: {
       notEmpty: true,
-      errorMessage: 'Missing Parameter: Age',
-      isInt: {
-        options: { min: 16 },
-        errorMessage: 'Invalid Parameter: Age - Must be 16 +'
-      },
-      toInt: true
+      errorMessage: 'Missing Parameter: Birthday'
     },
     gender: {
       notEmpty: true,
@@ -150,6 +146,22 @@ function checkDuplicateCredentials (req, res, next) {
     });
 }
 
+function checkDuplicateEmail (req, res, next) {
+  return req.DB.User.findByUsernameOrEmail(req.body.email)
+    .then(function (user) {
+      if (user) {
+        const error = lib.errorResponses.validationError([{msg: 'Invalid Parameter: Username or Email - Already In Use'}]);
+        req.logger.warn(error, 'POST /api/auth/signup');
+        return res.status(400).send(error);
+      }
+      return next();
+    }).catch(function (err) {
+      req.logger.error(err, 'POST /api/auth/signup');
+      const errorObject = lib.errorResponses.internalServerError('Failed in Checking Credentials');
+      return res.status(errorObject.httpCode).send(errorObject);
+    });
+}
+
 function addPhotoToScope (req, res, next) {
   if (req.files && Array.isArray(req.files) && req.files.length > 0) {
     const pictureData = {
@@ -177,7 +189,7 @@ function addUserToScope (req, res, next) {
     lname: user.lname,
     gender: user.gender,
     alias: user.alias,
-    age: user.age,
+    birthday: moment(user.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD'),
     street: user.street,
     barangay: user.barangay,
     city: user.city,
@@ -210,7 +222,7 @@ function replicateUser (req, res, next) {
     fname: user.fname,
     lname: user.lname,
     email: user.email,
-    age: user.age,
+    birthday: user.birthday,
     gender: user.gender,
     alias: user.alias,
     street: user.street,
@@ -283,6 +295,7 @@ function respond (req, res) {
 module.exports = {
   validateParams,
   checkDuplicateCredentials,
+  checkDuplicateEmail,
   addPhotoToScope,
   addUserToScope,
   logic,

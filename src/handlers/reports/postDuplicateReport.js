@@ -48,7 +48,7 @@ function logic (req, res, next) {
 
 function respond (req, res) {
   req.logger.info(req.$scope.report, 'POST /api/reports/duplicates');
-  res.status(200).send({
+  res.status(201).send({
     status: 'SUCCESS',
     statusCode: 0,
     httpCode: 201

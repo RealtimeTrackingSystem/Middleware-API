@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const _ = require('lodash');
 const lib = require('../lib');
+const moment = require('moment');
 
 const USER_FIELDS = [
   'username', 'email', 'fname', 'lname', 'alias',
@@ -18,7 +19,6 @@ const UserSchema = new Schema({
   lname: { type: String, index: true  },
   gender: { type: String, enum: ['M', 'F'], required: true, index: true  },
   alias: { type: String, index: true  },
-  age: { type: Number, index: true  },
   street: { type: String, index: true  },
   barangay: { type: String, index: true  },
   city: { type: String, index: true  },
@@ -35,8 +35,16 @@ const UserSchema = new Schema({
     updatedAt: Date
   }],
   accessLevel: { type: String, Enum: ['ADMIN', 'HOST', 'USER'], default: 'USER', index: true  },
-  profilePicture: { type: Schema.Types.ObjectId, ref: 'Picture', index: true  }
-}, { timestamps: true });
+  profilePicture: { type: Schema.Types.ObjectId, ref: 'Picture', index: true  },
+  birthday: { type: String, required: true }
+}, { timestamps: true, getters: true, virtuals: true });
+
+UserSchema.set('toObject', { getters: true });
+
+UserSchema.virtual('age').get(function () {
+  return moment().diff(this.birthday, 'years');
+});
+
 
 /* private functions */
 
@@ -145,7 +153,7 @@ UserSchema.statics.add = function (user) {
         lname: user.lname,
         gender: user.gender,
         alias: user.alias,
-        age: user.age,
+        birthday: user.birthday,
         street: user.street,
         barangay: user.barangay,
         city: user.city,
