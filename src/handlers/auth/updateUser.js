@@ -18,7 +18,7 @@ internals.rollbackUser = (req, res) => {
     fname: userData.fname,
     lname: userData.lname,
     email: userData.email,
-    age: userData.age,
+    birthday: userData.birthday,
     gender: userData.gender,
     alias: userData.alias,
     street: userData.street,
@@ -83,14 +83,9 @@ function validateBody (req, res, next) {
         errorMessage: 'Invalid Parameter Length: Alias'
       }
     },
-    age: {
+    birthday: {
       notEmpty: true,
-      errorMessage: 'Missing Parameter: Age',
-      isInt: {
-        options: { min: 16 },
-        errorMessage: 'Invalid Parameter: Age - Must be 16 +'
-      },
-      toInt: true
+      errorMessage: 'Missing Parameter: Birthday'
     },
     street: {
       notEmpty: true,
@@ -201,7 +196,7 @@ function updateUser (req, res, next) {
     fname: userData.fname,
     lname: userData.lname,
     email: userData.email,
-    age: userData.age,
+    birthday: userData.birthday,
     gender: userData.gender,
     alias: userData.alias,
     street: userData.street,
