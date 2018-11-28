@@ -25,7 +25,7 @@ function validateBody (req, res, next) {
 
 function logic (req, res, next) {
   const { parentDuplicate, duplicate } = req.body;
-  return req.api.duplicateReport(parentDuplicate, duplicate)
+  return req.api.report.duplicateReport(parentDuplicate, duplicate)
     .then(response => {
       req.logger.info(response, 'POST /api/reports/duplicates');
       req.$scope.response = response;
