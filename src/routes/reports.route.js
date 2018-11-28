@@ -19,7 +19,7 @@ reportRoute.get('/api/reports/search/:searchString',
   handlers.reports.searchReports.validateQuery,
   handlers.reports.searchReports.logic);
 
-reportRoute.post('/api/reports/duplicates',
+reportRoute.post('/api/reports/duplicates/bulk',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
@@ -33,6 +33,15 @@ reportRoute.get('/api/reports/duplicates',
   handlers.auth.authentication.logActivity,
   handlers.reports.getDuplicateReports.logic,
   handlers.reports.getDuplicateReports.respond);
+
+reportRoute.post('/api/reports/duplicates',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.authentication.checkHostAdminship,
+  handlers.reports.postDuplicateReport.validateBody,
+  handlers.reports.postDuplicateReport.logic,
+  handlers.reports.postDuplicateReport.respond);
 
 reportRoute.get('/api/reports',
   handlers.auth.authentication.requireAuth,
