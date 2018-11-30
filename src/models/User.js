@@ -70,7 +70,7 @@ function prepareHost (user, hostId, type) {
           _id: hostId,
           isOwner: true,
           isAdmin: true,
-          isBlocked: true,
+          isBlocked: false,
           createdAt: Date.now(),
           updatedAt: Date.now()
         },

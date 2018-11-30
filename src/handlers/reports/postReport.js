@@ -49,6 +49,14 @@ function validateBody (req, res, next) {
         options: { max: 255 },
         errorMessage: 'Invalid Parameter Length: Host ID'
       }
+    },
+    urgency: {
+      notEmpty: true,
+      errorMessage: 'Missing Parameter: Urgency',
+    },
+    category: {
+      notEmpty: true,
+      errorMessage: 'Missing Parameter: Category',
     }
   };
   req.checkBody(schema);
@@ -65,6 +73,43 @@ function validateBody (req, res, next) {
     return next();
   }
 
+}
+
+function checkCategory (req, res, next) {
+  const category = req.body.category;
+  let error;
+  if (!category) {
+    error = {
+      status: 'ERROR',
+      statusCode: 2,
+      httpCode: 400,
+      message: 'Missing Parameter: Category'
+    };
+  }
+  
+  if (!category.description) {
+    error = {
+      status: 'ERROR',
+      statusCode: 3,
+      httpCode: 400,
+      message: 'Invalid Parameter: Category -> no description'
+    };
+  }
+
+  if (!category.name) {
+    error = {
+      status: 'ERROR',
+      statusCode: 3,
+      httpCode: 400,
+      message: 'Invalid Parameter: Category -> no name'
+    };
+  }
+
+  if (error) {
+    req.logger.warn(error, 'POST /api/reports');
+    return res.status(error.httpCode).send(error);
+  }
+  next();
 }
 
 function processTags (req, res, next) {
@@ -148,6 +193,7 @@ function respond (req, res) {
 
 module.exports = {
   validateBody,
+  checkCategory,
   processTags,
   processMediaUploads,
   processPeopleAndProperties,
