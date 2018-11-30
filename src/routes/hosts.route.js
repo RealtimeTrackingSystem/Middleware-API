@@ -3,6 +3,13 @@ const handlers = require('../handlers');
 
 const hostRoute = express.Router();
 
+hostRoute.get('/api/hosts/search-paginated/:searchString',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.hosts.searchHostPaginated.validateQuery,
+  handlers.hosts.searchHostPaginated.logic);
+
 hostRoute.put('/api/hosts/approval/:hostId',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
