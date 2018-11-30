@@ -79,6 +79,25 @@ class Host {
     };
     return rp.put(options);
   }
+  searchHostPaginated (searchString, page = 0, limit = 30) {
+    const qs = {};
+    if (page) {
+      qs.page = page;
+    }
+    if (limit) {
+      qs.limit = limit;
+    }
+    let options = {
+      uri: this.host_url + '/search-paginated/' + searchString,
+      qs: qs,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.get(options);
+  }
 }
 
 module.exports = Host;

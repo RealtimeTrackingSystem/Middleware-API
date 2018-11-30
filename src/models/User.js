@@ -39,7 +39,7 @@ const UserSchema = new Schema({
   birthday: { type: String, required: true }
 }, { timestamps: true, getters: true, virtuals: true });
 
-UserSchema.set('toObject', { getters: true });
+UserSchema.set('toObject', { getters: true, virtuals: true });
 
 UserSchema.virtual('age').get(function () {
   return moment().diff(this.birthday, 'years');
