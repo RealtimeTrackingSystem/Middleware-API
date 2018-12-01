@@ -35,7 +35,7 @@ class Host {
     };
     return rp.post(options);
   }
-  getHosts (page = null, limit = null, filter) {
+  getHosts (page = null, limit = null, filter, hostOptions = {}) {
     const qs = {};
     if (page) {
       qs.page = page;
@@ -45,6 +45,10 @@ class Host {
     }
     if (filter) {
       qs.filter = filter;
+    }
+    if (hostOptions.isApproved != null) {
+      console.log('\n\n\n\n\n\n\n\n', hostOptions.isApproved, '\n\n\n\n\n\n\n')
+      qs.isApproved = hostOptions.isApproved;
     }
     let options = {
       uri: this.host_url,

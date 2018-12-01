@@ -34,7 +34,12 @@ function logic (req, res, next) {
   const page = req.query.page;
   const limit = req.query.limit;
   const filter = req.query.filter || null;
-  return req.api.host.getHosts(page, limit, filter)
+  const options = {};
+  if (req.query.isApproved != null) {
+    console.log('\n\n\n\n\n\n\n', req.query.isApproved, '\n\n\n\n\n\n\n\n');
+    options.isApproved = req.query.isApproved;
+  }
+  return req.api.host.getHosts(page, limit, filter, options)
     .then(function (result) {
       req.$scope.result = result;
       next();
