@@ -86,12 +86,20 @@ class Report {
     };
     return rp.put(options);
   }
-  searchReport (searchString, page, limit, resources) {
+  searchReport (searchString, page, limit, searchOptions = {}) {
     let qs = {
       page: page,
-      limit: limit,
-      resources: resources
+      limit: limit
     };
+
+    if (searchOptions.hostId) {
+      qs.hostId = searchOptions.hostId;
+    }
+
+    if (searchOptions.isDuplicate != null) {
+      console.log('\n\n\n\n\n\n\n', searchOptions.isDuplicate, '\n\n\n\n\n\n\n\n');
+      qs.isDuplicate = searchOptions.isDuplicate;
+    }
 
     const options = {
       uri: this.report_url + '/search' + '/' + searchString,

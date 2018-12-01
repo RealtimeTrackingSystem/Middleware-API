@@ -26,6 +26,12 @@ function validateQuery (req, res, next) {
       isInt: {
         errorMessage: 'Invalid Parameter: Page'
       }
+    },
+    hostId: {
+      optional: true
+    },
+    isDuplicate: {
+      optional: true
     }
   };
   req.checkQuery(schema);
@@ -55,9 +61,16 @@ function validateParams (req, res, next) {
 }
 
 function logic (req, res) {
-  const { page, limit, resources } = req.query;
+  const { page, limit, hostId, isDuplicate } = req.query;
   const searchString = req.params.searchString;
-  return req.api.report.searchReport(searchString, page, limit, resources)
+  const options = {};
+  if (hostId) {
+    options.hostId = hostId;
+  }
+  if (isDuplicate != null) {
+    options.isDuplicate = isDuplicate;
+  }
+  return req.api.report.searchReport(searchString, page, limit, options)
     .then(function (response) {
       const success = {
         status: 'SUCCESS',
