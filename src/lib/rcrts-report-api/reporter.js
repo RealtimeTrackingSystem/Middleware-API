@@ -100,6 +100,21 @@ class Reporter {
     };
     return rp.put(options);
   }
+  addOrUpdateFirebaseToken (reporterId, deviceId, token) {
+    const body = {
+      reporterId, deviceId, token
+    };
+    const options = {
+      uri: this.reporter_url + '/firebase',
+      body: body,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
 }
 
 module.exports = Reporter;

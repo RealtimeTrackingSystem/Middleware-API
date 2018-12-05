@@ -1,3 +1,4 @@
 module.exports = {
-  getReporterById: require('./getReporterById')
+  getReporterById: require('./getReporterById'),
+  addOrUpdateFirebaseToken: require('./addOrUpdateFirebaseToken')
 };
