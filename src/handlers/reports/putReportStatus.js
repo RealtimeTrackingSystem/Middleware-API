@@ -24,9 +24,8 @@ function validateBody (req, res, next) {
 }
 
 function setToVoid (req, res, next) {
-  const status = 'VOID';
   const reportId = req.params.reportId;
-  return req.api.report.putReportStatus(reportId, status.ToUpperCase())
+  return req.api.report.cancelReport(reportId)
     .then(function (response) {
       req.$scope.response = response;
       next();
