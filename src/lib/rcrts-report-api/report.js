@@ -86,6 +86,17 @@ class Report {
     };
     return rp.put(options);
   }
+  cancelReport (reportId) {
+    const options = {
+      uri: this.report_url + '/status' + '/' + reportId,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.delete(options);
+  }
   searchReport (searchString, page, limit, searchOptions = {}) {
     let qs = {
       page: page,
