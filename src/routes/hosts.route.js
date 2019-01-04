@@ -68,6 +68,7 @@ hostRoute.put('/api/hosts/requests/:hostId',
   handlers.hosts.acceptUserRequest.validateBody,
   handlers.hosts.acceptUserRequest.checkUser,
   handlers.hosts.acceptUserRequest.logic,
+  handlers.hosts.acceptUserRequest.sendNotification,
   handlers.hosts.acceptUserRequest.respond);
 
 hostRoute.post('/api/hosts/invites',
