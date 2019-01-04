@@ -277,6 +277,24 @@ UserSchema.statics.updatePassword = function (userId, oldPassword, newPassword) 
     });
 };
 
+UserSchema.statics.rejectUserRequest = function (userId, hostId) {
+  return User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw {
+          success: false,
+          reason: 'Invalid Parameter: User Id'
+        };
+      }
+      const hosts = user.hosts.filter((host) => {
+        return host._id.toString() !== hostId.toString();
+      });
+      return User.findOneAndUpdate({ _id: userId }, {
+        hosts: hosts
+      });
+    });
+};
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

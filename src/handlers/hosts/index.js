@@ -7,5 +7,6 @@ module.exports = {
   sendUserRequest: require('./sendHostRequest'),
   acceptUserRequest: require('./acceptUserRequest'),
   acceptNewHost: require('./acceptNewHost'),
-  searchHostPaginated: require('./searchHostPaginated')
+  searchHostPaginated: require('./searchHostPaginated'),
+  rejectHostRequest: require('./rejectHostRequest')
 };

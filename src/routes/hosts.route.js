@@ -71,6 +71,14 @@ hostRoute.put('/api/hosts/requests/:hostId',
   handlers.hosts.acceptUserRequest.sendNotification,
   handlers.hosts.acceptUserRequest.respond);
 
+hostRoute.delete('/api/hosts/requests/:hostId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.hosts.rejectHostRequest.checkHost,
+  handlers.hosts.rejectHostRequest.rejectRequest,
+  handlers.hosts.rejectHostRequest.respond);
+
 hostRoute.post('/api/hosts/invites',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
