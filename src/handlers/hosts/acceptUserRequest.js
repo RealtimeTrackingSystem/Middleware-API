@@ -109,6 +109,22 @@ function logic (req, res, next) {
     });
 }
 
+function sendNotification (req, res, next) {
+  const userToApprove = req.$scope.userToApprove;
+  const hostId = req.params.hostId;
+
+  return req.Api.host.hostRequestApprovedNotif(hostId, userToApprove.reporterID)
+    .then((result) => {
+      req.logger.info(result, 'POST /api/hosts/requests/:hostId');
+      next();
+    })
+    .catch((err) => {
+      req.logger.error(err, 'POST /api/hosts/requests/:hostId');
+      next();
+    });
+
+}
+
 function respond (req, res) {
   const response = {
     status: 'SUCCESS',
@@ -123,5 +139,6 @@ module.exports = {
   validateBody,
   checkUser,
   logic,
+  sendNotification,
   respond
 };

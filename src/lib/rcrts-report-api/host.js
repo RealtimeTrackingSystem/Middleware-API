@@ -102,6 +102,21 @@ class Host {
     };
     return rp.get(options);
   }
+  hostRequestApprovedNotif (hostId, reporterId) {
+    const options = {
+      uri: this.host_url + '/approveUserRequest',
+      body: {
+        hostId,
+        reporterId
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
 }
 
 module.exports = Host;
