@@ -27,7 +27,26 @@ function checkHost (req, res, next) {
 function rejectRequest (req, res, next) {
   const hostId = req.params.hostId;
   const userId = req.body.userId;
-  return req.DB.User.rejectUserRequest(userId, hostId)
+  return req.DB.User.findOne({ _id: userId })
+    .then((user) => {
+      if (!user) {
+        const error = {
+          status: 'ERROR',
+          statusCode: 2,
+          httpCode: 400,
+          message: 'Invalid Parameter: User Id'
+        };
+        return res.status(error.httpCode).send(error);
+      }
+      const hosts = user.hosts.filter((host) => {
+        return host._id.toString() !== hostId;
+      });
+      return req.DB.User.findOneAndUpdate({
+        _id: userId
+      }, {
+        hosts: hosts
+      });
+    })
     .then(function (result) {
       if (result.error) {
         const error = {
