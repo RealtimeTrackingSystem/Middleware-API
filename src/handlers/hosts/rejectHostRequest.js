@@ -26,7 +26,7 @@ function checkHost (req, res, next) {
 
 function rejectRequest (req, res, next) {
   const hostId = req.params.hostId;
-  const userId = req.body.userId;
+  const userId = req.params.userId;
   return req.DB.User.findOne({ _id: userId })
     .then((user) => {
       if (!user) {

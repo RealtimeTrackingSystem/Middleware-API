@@ -71,7 +71,7 @@ hostRoute.put('/api/hosts/requests/:hostId',
   handlers.hosts.acceptUserRequest.sendNotification,
   handlers.hosts.acceptUserRequest.respond);
 
-hostRoute.delete('/api/hosts/requests/:hostId',
+hostRoute.delete('/api/hosts/requests/:hostId/:userId',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
