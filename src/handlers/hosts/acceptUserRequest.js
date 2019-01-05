@@ -113,7 +113,7 @@ function sendNotification (req, res, next) {
   const userToApprove = req.$scope.userToApprove;
   const hostId = req.params.hostId;
 
-  return req.Api.host.hostRequestApprovedNotif(hostId, userToApprove.reporterID, { type: 'ACCEPT_REQUEST' })
+  return req.api.host.hostRequestApprovedNotif(hostId, userToApprove.reporterID, { type: 'ACCEPT_REQUEST' })
     .then((result) => {
       req.logger.info(result, 'POST /api/hosts/requests/:hostId');
       next();

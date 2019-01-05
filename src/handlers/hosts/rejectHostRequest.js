@@ -72,7 +72,7 @@ function sendNotif (req, res, next) {
   const type = 'REJECT_REQUEST';
   const hostId = req.params;
   const userData = req.$scope.userData;
-  return req.Api.host.hostRequestApprovedNotif(hostId, userData.reporterID, { type })
+  return req.api.host.hostRequestApprovedNotif(hostId, userData.reporterID, { type })
     .then((result) => {
       req.logger.info(result, 'DELTE /api/hosts/requests/:hostId');
       next();
