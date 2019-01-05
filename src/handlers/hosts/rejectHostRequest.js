@@ -70,7 +70,7 @@ function rejectRequest (req, res, next) {
 
 function sendNotif (req, res, next) {
   const type = 'REJECT_REQUEST';
-  const hostId = req.params;
+  const hostId = req.params.hostId;
   const userData = req.$scope.userData;
   return req.api.host.hostRequestApprovedNotif(hostId, userData.reporterID, { type })
     .then((result) => {
