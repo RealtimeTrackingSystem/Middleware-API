@@ -58,6 +58,22 @@ function rejectRequest (req, res, next) {
         req.logger.warn(error, 'DELETE /api/hosts/requests/:hostId');
         return res.status(error.httpCode).send(error);
       }
+      req.$scope.userData = result;
+      next();
+    })
+    .catch(function (err) {
+      const error = lib.errorResponses.internalServerError('Internal Server Error');
+      req.logger.error(err, 'DELETE /api/hosts/requests/:hostId');
+      res.status(500).send(error);
+    });
+}
+
+function sendNotif (req, res, next) {
+  const type = 'REJECT_REQUEST';
+  const hostId = req.params;
+  const userData = req.$scope.userData;
+  return req.Api.host.hostRequestApprovedNotif(hostId, userData.reporterID, { type })
+    .then((result) => {
       next();
     })
     .catch(function (err) {
@@ -80,5 +96,6 @@ function respond (req, res) {
 module.exports = {
   checkHost,
   rejectRequest,
+  sendNotif,
   respond
 };
