@@ -74,12 +74,12 @@ function sendNotif (req, res, next) {
   const userData = req.$scope.userData;
   return req.Api.host.hostRequestApprovedNotif(hostId, userData.reporterID, { type })
     .then((result) => {
+      req.logger.info(result, 'DELTE /api/hosts/requests/:hostId');
       next();
     })
-    .catch(function (err) {
-      const error = lib.errorResponses.internalServerError('Internal Server Error');
+    .catch((err) => {
       req.logger.error(err, 'DELETE /api/hosts/requests/:hostId');
-      res.status(500).send(error);
+      next();
     });
 }
 
