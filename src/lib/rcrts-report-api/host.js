@@ -102,9 +102,14 @@ class Host {
     };
     return rp.get(options);
   }
-  hostRequestApprovedNotif (hostId, reporterId) {
+  hostRequestApprovedNotif (hostId, reporterId, config = {}) {
+    const qs = {};
+    if (config.type) {
+      qs.type = config.type;
+    }
     const options = {
       uri: this.host_url + '/approveUserRequest',
+      qs: qs,
       body: {
         hostId,
         reporterId

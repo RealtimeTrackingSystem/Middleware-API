@@ -77,6 +77,7 @@ hostRoute.delete('/api/hosts/requests/:hostId/:userId',
   handlers.auth.authentication.logActivity,
   handlers.hosts.rejectHostRequest.checkHost,
   handlers.hosts.rejectHostRequest.rejectRequest,
+  handlers.hosts.rejectHostRequest.sendNotif,
   handlers.hosts.rejectHostRequest.respond);
 
 hostRoute.post('/api/hosts/invites',
