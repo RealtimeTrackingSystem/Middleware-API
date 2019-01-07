@@ -130,6 +130,24 @@ function validateParams (req, res, next) {
   }
 }
 
+function checkHostId (req, res, next) {
+  const hostId = req.body.hostId;
+  if (!hostId) {
+    return next();
+  }
+  const isObjectId = lib.customValidators.isObjectId(hostId);
+  if (!isObjectId) {
+    const error = {
+      status: 'ERROR',
+      statusCode: 3,
+      httpCode: 400,
+      message: 'Invalid Parameter: Host ID'
+    };
+    return res.status(error.httpCode).send(error);
+  }
+  next();
+}
+
 function checkDuplicateCredentials (req, res, next) {
   return req.DB.User.findByUsernameOrEmail(req.body.username, req.body.email)
     .then(function (user) {
@@ -181,7 +199,8 @@ function addPhotoToScope (req, res, next) {
 
 function addUserToScope (req, res, next) {
   const user = req.body;
-  req.$scope.user = {
+  const hostId = req.body.hostId;
+  const input = {
     username: user.username,
     email: user.email,
     password: user.password,
@@ -198,6 +217,18 @@ function addUserToScope (req, res, next) {
     zip: user.zip,
     reporterID: user.reporterID
   };
+  if (hostId) {
+    const host = {
+      _id: hostId,
+      isOwner: false,
+      isAdmin: false,
+      isBlocked: false,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    input.hosts = [host];
+  }
+  req.$scope.user = input;
   return next();
 }
 
@@ -296,6 +327,7 @@ module.exports = {
   validateParams,
   checkDuplicateCredentials,
   checkDuplicateEmail,
+  checkHostId,
   addPhotoToScope,
   addUserToScope,
   logic,
