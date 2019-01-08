@@ -277,6 +277,60 @@ UserSchema.statics.updatePassword = function (userId, oldPassword, newPassword) 
     });
 };
 
+UserSchema.statics.findMembers = async function (hostId, page = null, limit = null) {
+  try {
+    const query = {
+      $and: [
+        { 'hosts._id': hostId },
+        { 'hosts.isBlocked': false }
+      ]
+    };
+    const membersQ = User.find(query).select('-password');
+    if (limit) {
+      const offset = Number(page) * Number(limit) || 0;
+      members.offset(offset).limit(Number(limit));
+    }
+    const members = await membersQ;
+    const count = await User.countDocuments(query);
+    return {
+      members,
+      count
+    };
+  } catch (e) {
+    throw e;
+  }
+};
+
+UserSchema.statics.setAsAdmin = function (userId, hostId, isAdmin = false) {
+  return User.findOne({
+    _id: userId
+  })
+    .then((user) => {
+      if (!user) {
+        throw {
+          error: true,
+          message: 'Invalid Parameter: User Id'
+        };
+      }
+      const hosts = user.hosts;
+      const hostIndex = _.findIndex(hosts, (host) => {
+        return host._id.toString() === hostId;
+      });
+      if (hostIndex < 0) {
+        throw {
+          error: true,
+          message: 'Invalid Parameter: Host Id'
+        };
+      }
+      hosts[hostIndex].isAdmin = isAdmin;
+      return User.findOneAndUpdate({
+        _id: userId
+      }, {
+        hosts: hosts
+      });
+    })
+}
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
