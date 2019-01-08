@@ -3,5 +3,6 @@ module.exports = {
   reports: require('./reports'),
   media: require('./media'),
   hosts: require('./hosts'),
-  reporters: require('./reporters')
+  reporters: require('./reporters'),
+  people: require('./people')
 };
