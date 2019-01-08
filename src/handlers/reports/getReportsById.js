@@ -38,6 +38,26 @@ function logic (req, res, next) {
     });
 }
 
+function populateUser (req, res, next) {
+  const report = req.$scope.report;
+  const reporterId = report._reporter && report._reporter._id ? report._reporter._id : report._reporter;
+  return req.DB.User.findOne({
+    reporterID: reporterId
+  })
+    .select('-password')
+    .then((user) => {
+      report.user = user;
+      req.$scope.report = report;
+      next();
+    })
+    .catch((err) => {
+      req.logger.warn(err, 'GET /api/reports/:reportId');
+      report.user = null;
+      req.$scope.report = report;
+      next();
+    });
+}
+
 function respond (req, res) {
   req.logger.info(req.$scope.report, 'GET /api/reports/:reportId');
   res.status(200).send({
@@ -51,5 +71,6 @@ function respond (req, res) {
 module.exports = {
   validateParams,
   logic,
+  populateUser,
   respond
 };
