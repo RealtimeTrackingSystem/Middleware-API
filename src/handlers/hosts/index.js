@@ -8,5 +8,6 @@ module.exports = {
   acceptUserRequest: require('./acceptUserRequest'),
   acceptNewHost: require('./acceptNewHost'),
   searchHostPaginated: require('./searchHostPaginated'),
-  rejectHostRequest: require('./rejectHostRequest')
+  rejectHostRequest: require('./rejectHostRequest'),
+  setAsAdmin: require('./setAsAdmin')
 };

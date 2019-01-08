@@ -1,3 +1,4 @@
 module.exports = {
-  searchPeople: require('./searchPeople')
+  searchPeople: require('./searchPeople'),
+  searchMembers: require('./searchMembers')
 };
