@@ -49,7 +49,9 @@ reportRoute.get('/api/reports',
   handlers.auth.authentication.logActivity,
   handlers.reports.getReports.validateParams,
   handlers.reports.getReports.addOtherOptions,
-  handlers.reports.getReports.logic);
+  handlers.reports.getReports.logic,
+  handlers.reports.getReports.populateUser,
+  handlers.reports.getReports.respond);
 
 reportRoute.post('/api/reports',
   handlers.media.uploads.multipleUpload('reports', 4, 'reports'),
@@ -88,6 +90,7 @@ reportRoute.get('/api/reports/:reportId',
   handlers.auth.authentication.logActivity,
   handlers.reports.getReportsById.validateParams,
   handlers.reports.getReportsById.logic,
+  handlers.reports.getReportsById.populateUser,
   handlers.reports.getReportsById.respond);
 
 module.exports = reportRoute;

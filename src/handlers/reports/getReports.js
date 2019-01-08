@@ -1,4 +1,26 @@
+const Promise = require('bluebird');
 const lib = require('../../lib');
+const User = require('../../models/User');
+
+const internals = {};
+internals.populateUser = function (report) {
+  const reporterId = report._reporter && report._reporter._id ? report._reporter._id : report._reporter;
+  return User.findOne({
+    reporterID: reporterId
+  })
+    .select('-password')
+    .then((user) => {
+      if (!user) {
+        report.user = null;
+      } else {
+        report.user = user;
+      }
+      return report;
+    })
+    .catch((e) => {
+      report.user = null;
+    });
+};
 
 function validateParams (req, res, next) {
   const schema = {
@@ -40,7 +62,7 @@ function addOtherOptions (req, res, next) {
   next();
 }
 
-function logic (req, res) {
+function logic (req, res, next) {
   const tags = req.query.tags;
   const page = req.query.page;
   const limit = req.query.limit;
@@ -48,15 +70,8 @@ function logic (req, res) {
   const otherOptions = req.$scope.otherOptions;
   return req.api.report.getReports(tags, page, limit, resources, otherOptions)
     .then(function (response) {
-      const success = {
-        status: 'SUCCESS',
-        statusCode: 0,
-        httpCode: 200
-      };
-      req.logger.info(success, 'GET /api/reports');
-      success.reports = response.reports;
-      success.count = response.count;
-      res.status(200).send(success);
+      req.$scope.response = response;
+      next();
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
@@ -65,8 +80,37 @@ function logic (req, res) {
     });
 }
 
+function populateUser (req, res, next) {
+  const reports = req.$scope.response.reports;
+  return Promise.map(reports, internals.populateUser)
+    .then((populatedReports) => {
+      req.$scope.response.reports = populatedReports;
+      next();
+    })
+    .catch(function (error) {
+      const err = lib.errorResponses.internalServerError('Internal Server Error');
+      req.logger.error(error, 'GET /api/reports');
+      return res.status(500).send(err);
+    });
+}
+
+function respond (req, res) {
+  const response = req.$scope.response;
+  const success = {
+    status: 'SUCCESS',
+    statusCode: 0,
+    httpCode: 200
+  };
+  req.logger.info(success, 'GET /api/reports');
+  success.reports = response.reports;
+  success.count = response.count;
+  res.status(200).send(success);
+}
+
 module.exports = {
   validateParams,
   addOtherOptions,
-  logic
+  logic,
+  populateUser,
+  respond
 };
