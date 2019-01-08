@@ -285,12 +285,12 @@ UserSchema.statics.findMembers = async function (hostId, page = null, limit = nu
         { 'hosts.isBlocked': false }
       ]
     };
-    const membersQ = User.find(query).select('-password');
-    if (limit) {
+    let membersQ = User.find(query).select('-password');
+    if (limit !== null) {
       const offset = Number(page) * Number(limit) || 0;
-      members.offset(offset).limit(Number(limit));
+      membersQ = User.find(query).select('-password').skip(offset).limit(Number(limit));
     }
-    const members = await membersQ;
+    const members = await membersQ || [];
     const count = await User.countDocuments(query);
     return {
       members,
