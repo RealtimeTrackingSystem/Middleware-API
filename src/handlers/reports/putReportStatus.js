@@ -43,8 +43,10 @@ function setToVoid (req, res, next) {
 }
 
 function logic (req, res, next) {
-  const { status, note } = req.body;
+  let { status, note } = req.body;
   const reportId = req.params.reportId;
+  const user = req.user;
+  note += ` (Updated by: ${user.fname} ${user.lname}, ID ${user._id}, Email: ${user.email})`;
   return req.api.report.putReportStatus(reportId, status.toUpperCase(), note)
     .then(function (response) {
       req.$scope.response = response;
