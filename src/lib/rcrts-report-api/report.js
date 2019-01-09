@@ -182,6 +182,20 @@ class Report {
     };
     return rp.post(options);
   }
+  removeDuplicateReport (duplicateReport) {
+    const options = {
+      uri: this.report_url + '/duplicates',
+      body: {
+        duplicate: duplicateReport
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
+  }
 }
 
 module.exports = Report;
