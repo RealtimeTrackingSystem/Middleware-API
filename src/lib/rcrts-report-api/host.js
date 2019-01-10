@@ -83,6 +83,17 @@ class Host {
     };
     return rp.put(options);
   }
+  disapproveHost (hostId) {
+    const options = {
+      uri: this.host_url + '/disapproval/' + hostId,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
+  }
   searchHostPaginated (searchString, page = 0, limit = 30) {
     const qs = {};
     if (page) {

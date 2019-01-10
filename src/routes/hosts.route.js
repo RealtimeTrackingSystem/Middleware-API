@@ -26,6 +26,14 @@ hostRoute.put('/api/hosts/approval/:hostId',
   handlers.hosts.acceptNewHost.logic,
   handlers.hosts.acceptNewHost.respond);
 
+hostRoute.put('/api/hosts/disapproval/:hostId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.auth.authentication.checkUserAdminship,
+  handlers.hosts.disapproveHost.logic,
+  handlers.hosts.disapproveHost.respond);
+
 
 hostRoute.get('/api/hosts',
   handlers.auth.authentication.requireAuth,
