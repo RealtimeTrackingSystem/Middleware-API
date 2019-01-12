@@ -3,5 +3,6 @@ module.exports = {
   searchMembers: require('./searchMembers'),
   addSummon: require('./addSummon'),
   updateSummon: require('./updateSummon'),
-  getSummonById: require('./getSummonById')
+  getSummonById: require('./getSummonById'),
+  sendClearance: require('./sendClearance')
 };

@@ -26,6 +26,7 @@ reportRoute.post('/api/reports/mediationNotes',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
   handlers.auth.authentication.logActivity,
+  handlers.auth.authentication.checkHostAdminship,
   handlers.reports.addMediation.processMedia,
   handlers.reports.addMediation.logic);
 
