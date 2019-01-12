@@ -72,6 +72,23 @@ class People {
     };
     return rp.put(options);
   }
+  sendClearance ({ personId, clearanceNotes, reporterId, reporterMetaData }) {
+    const options = {
+      uri: this.people_url + '/clearances',
+      body: {
+        personId,
+        clearanceNotes,
+        reporterId,
+        reporterMetaData
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
 }
 
 module.exports = People;
