@@ -8,5 +8,9 @@ module.exports = {
   massStatusUpdate: require('./massStatusUpdate'),
   getDuplicateReports: require('./getDuplicateReports'),
   postDuplicateReport: require('./postDuplicateReport'),
-  putRemoveDuplicateReport: require('./putRemoveDuplicateReport')
+  putRemoveDuplicateReport: require('./putRemoveDuplicateReport'),
+  addMediation: require('./addMediation'),
+  getMediationById: require('./getMediationById'),
+  addFileAction: require('./addFileAction'),
+  updateFileAction: require('./updateFileAction')
 };

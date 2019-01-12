@@ -33,6 +33,45 @@ class People {
     };
     return rp.get(options);
   }
+  getSummonById (summonId) {
+    const options = {
+      uri: this.people_url + '/summons/' + summonId,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.get(options);
+  }
+  sendSummon (personId) {
+    const options = {
+      uri: this.people_url + '/summons',
+      body: {
+        personId: personId
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
+  updateSummon (summonId, compliance, complianceNotes) {
+    const options = {
+      uri: this.people_url + '/summons/' + summonId,
+      body: {
+        compliance, complianceNotes
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
+  }
 }
 
 module.exports = People;

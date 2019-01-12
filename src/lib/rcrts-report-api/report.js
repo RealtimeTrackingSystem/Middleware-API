@@ -196,6 +196,65 @@ class Report {
     };
     return rp.put(options);
   }
+  addMediationNote (mediationNote) {
+    const { reportId, note, reporterId, media} = mediationNote;
+    const body = {
+      reportId,
+      note,
+      reporterId,
+      media
+    };
+    const options = {
+      uri: this.report_url + '/mediationNotes',
+      body: body,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
+  getMediationNoteById (mediationNoteId) {
+    const options = {
+      uri: this.report_url + '/mediationNotes/' + mediationNoteId,
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.get(options);
+  }
+  addFileAction (fileAction) {
+    const { reportId, note } = fileAction;
+    const options = {
+      uri: this.report_url + '/fileActions',
+      body: {
+        reportId, note
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.post(options);
+  }
+  updateFileAction (fileActionId, note) {
+    const options = {
+      uri: this.report_url + '/fileActions/' + fileActionId,
+      body: {
+        note
+      },
+      headers: {
+        'api-key': this.apiKey,
+        'content-type': 'application/json'
+      },
+      json: true
+    };
+    return rp.put(options);
+  }
 }
 
 module.exports = Report;
