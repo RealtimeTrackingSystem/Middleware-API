@@ -3,6 +3,32 @@ const handlers = require('../handlers');
 
 const reportRoute = express.Router();
 
+reportRoute.put('/api/reports/fileActions/:fileActionId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.updateFileAction.logic);
+
+reportRoute.post('/api/reports/fileActions',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.addFileAction.logic);
+
+reportRoute.get('/api/reports/mediationNotes/:mediationNoteId',
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.getMediationById.logic);
+
+reportRoute.post('/api/reports/mediationNotes',
+  handlers.media.uploads.multipleUpload('mediation', 1, 'mediation'),
+  handlers.auth.authentication.requireAuth,
+  handlers.auth.authentication.authenticate,
+  handlers.auth.authentication.logActivity,
+  handlers.reports.addMediation.processMedia,
+  handlers.reports.addMediation.logic);
+
 reportRoute.post('/api/v1/reports/mass-update-status',
   handlers.auth.authentication.requireAuth,
   handlers.auth.authentication.authenticate,
