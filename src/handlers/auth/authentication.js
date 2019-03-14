@@ -14,7 +14,7 @@ function authenticate (err, req, res, next) {
       httpCode: 401,
       message: 'Unauthorized User'
     };
-    req.logger.warn(error, 'passport-auth');
+    // req.logger.warn(error, 'passport-auth');
     return res.status(401).send(error);
   }
   next();
@@ -24,11 +24,11 @@ function logActivity (req, res, next) {
   const user = req.user;
   const url = req.url;
   const method = req.method;
-  req.logger.info({
-    user: user,
-    url: url,
-    method: method
-  }, `User ID: ${user._id} is accessing ${method} ${url}`);
+  // req.logger.info({
+  //   user: user,
+  //   url: url,
+  //   method: method
+  // }, `User ID: ${user._id} is accessing ${method} ${url}`);
   next();
 }
 
@@ -43,7 +43,7 @@ function adminOnly (req, res, next) {
       httpCode: 401,
       message: 'User Not Allowed'
     };
-    req.logger.warn(error, `USER ID: ${user._id} not allowed to access ${method} ${url}`);
+    // req.logger.warn(error, `USER ID: ${user._id} not allowed to access ${method} ${url}`);
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -60,7 +60,7 @@ function checkHostAdminship (req, res, next) {
       httpCode: 401,
       message: 'User Not Allowed'
     };
-    req.logger.warn(error, `USER ID: ${user._id} not allowed to access ${method} ${url}`);
+    // req.logger.warn(error, `USER ID: ${user._id} not allowed to access ${method} ${url}`);
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -77,7 +77,7 @@ function checkUserAdminship (req, res, next) {
       httpCode: 401,
       message: 'User Not Allowed'
     };
-    req.logger.warn(error, `USER ID: ${user._id} not allowed to access ${method} ${url}`);
+    // req.logger.warn(error, `USER ID: ${user._id} not allowed to access ${method} ${url}`);
     return res.status(error.httpCode).send(error);
   }
   next();

@@ -15,7 +15,7 @@ function validateParams (req, res, next) {
     error.message = 'Invalid Parameter: Duplicates';
   }
   if (error.statusCode) {
-    req.logger.warn(error, 'POST /api/reports/duplicates');
+    // req.logger.warn(error, 'POST /api/reports/duplicates');
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -25,7 +25,7 @@ function logic (req, res) {
   const duplicates = req.body.duplicates;
   return req.api.report.bulkDuplicateReport(duplicates)
     .then(function (response) {
-      req.logger.info(response, 'POST /api/reports/duplicates');
+      // req.logger.info(response, 'POST /api/reports/duplicates');
       res.status(201).send({
         status: 'SUCCESS',
         statusCode: 0,
@@ -34,7 +34,7 @@ function logic (req, res) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('POST /api/reports', error);
+      // req.logger.error('POST /api/reports', error);
       if (error.response.body && error.response.body.httpCode) {
         res.status(error.response.body.httpCode).send(error.response.body);
       }

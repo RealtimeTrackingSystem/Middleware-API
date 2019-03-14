@@ -7,10 +7,10 @@ function logic (req, res, next) {
     })
     .catch(function (err) {
       if (err.httpCode) {
-        req.logger.warn(err, 'GET /api/reports/duplicates');
+        // req.logger.warn(err, 'GET /api/reports/duplicates');
         return res.status(err.httpCode).send(err);
       }
-      req.logger.error(err, 'GET /api/reports/duplicates');
+      // req.logger.error(err, 'GET /api/reports/duplicates');
       res.status(500).send({
         status: 'ERROR',
         statusCode: 1,
@@ -21,7 +21,7 @@ function logic (req, res, next) {
 }
 
 function respond (req, res) {
-  req.logger.info(req.$scope.report, 'GET /api/reports/duplicates');
+  // req.logger.info(req.$scope.report, 'GET /api/reports/duplicates');
   res.status(200).send({
     status: 'SUCCESS',
     statusCode: 0,

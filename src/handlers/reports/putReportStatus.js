@@ -16,7 +16,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'PUT /api/reports/status/:reportId');
+    // req.logger.warn(errorObject, 'PUT /api/reports/status/:reportId');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -32,7 +32,7 @@ function setToVoid (req, res, next) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('PUT /api/reports/status/:reportId', error);
+      // req.logger.error('PUT /api/reports/status/:reportId', error);
       if (error.response.body && error.response.body.httpCode) {
         res.status(error.response.body.httpCode).send(error.response.body);
       }
@@ -54,7 +54,7 @@ function logic (req, res, next) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('PUT /api/reports/status/:reportId', error);
+      // req.logger.error('PUT /api/reports/status/:reportId', error);
       if (error.response.body && error.response.body.httpCode) {
         res.status(error.response.body.httpCode).send(error.response.body);
       }
@@ -66,7 +66,7 @@ function logic (req, res, next) {
 
 function respond (req, res) {
   const response = req.$scope.response;
-  req.logger.info(response, 'PUT /api/reports/status/:reportId');
+  // req.logger.info(response, 'PUT /api/reports/status/:reportId');
   res.status(201).send({
     status: 'SUCCESS',
     statusCode: 0,

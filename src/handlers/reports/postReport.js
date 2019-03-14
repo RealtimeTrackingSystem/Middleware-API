@@ -65,7 +65,7 @@ function validateBody (req, res, next) {
   req.body.reporterID = req.user.reporterID;
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn('POST /api/reports', errorObject);
+    // req.logger.warn('POST /api/reports', errorObject);
     req.$scope.filesToDelete = req.files;
     res.status(errorObject.httpCode).send(errorObject);
     return next();
@@ -106,7 +106,7 @@ function checkCategory (req, res, next) {
   }
 
   if (error) {
-    req.logger.warn(error, 'POST /api/reports');
+    // req.logger.warn(error, 'POST /api/reports');
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -171,7 +171,7 @@ function sendReport (req, res, next) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('POST /api/reports', error);
+      // req.logger.error('POST /api/reports', error);
       if (error.response.body && error.response.body.httpCode) {
         res.status(error.response.body.httpCode).send(error.response.body);
       }
@@ -183,7 +183,7 @@ function sendReport (req, res, next) {
 
 function respond (req, res) {
   const report = req.$scope.report;
-  req.logger.info(report, 'POST /api/reports');
+  // req.logger.info(report, 'POST /api/reports');
   res.status(201).send({
     status: 'SUCCESS',
     statusCode: 0,

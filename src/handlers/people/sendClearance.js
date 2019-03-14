@@ -3,7 +3,7 @@ const lib = require('../../lib');
 const internals = {};
 
 internals.catchError = (err, req, res) => {
-  req.logger.error(err, 'POST /api/people/clearances');
+  // req.logger.error(err, 'POST /api/people/clearances');
   res.status(500).send({
     status: 'ERROR',
     statusCode: 1,
@@ -43,7 +43,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn('POST /api/people/clearances', errorObject);
+    // req.logger.warn('POST /api/people/clearances', errorObject);
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -69,7 +69,7 @@ function logic (req, res) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('POST /api/people/clearances', error);
+      // req.logger.error('POST /api/people/clearances', error);
       if (error.response.body && error.response.body.httpCode) {
         return res.status(error.response.body.httpCode).send(error.response.body);
       }

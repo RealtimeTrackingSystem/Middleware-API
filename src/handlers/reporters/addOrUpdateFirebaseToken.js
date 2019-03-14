@@ -16,7 +16,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn('POST /api/reporters/firebaseToken', errorObject);
+    // req.logger.warn('POST /api/reporters/firebaseToken', errorObject);
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -28,7 +28,7 @@ function logic (req, res, next) {
   const { deviceId, token } = req.body;
   return req.api.reporter.addOrUpdateFirebaseToken(reporterId, deviceId, token)
     .then(result => {
-      req.logger.info(result, 'POST /api/reporters/firebaseToken');
+      // req.logger.info(result, 'POST /api/reporters/firebaseToken');
       res.status(201).send({
         status: 'SUCCESS',
         httpCode: 200,
@@ -37,7 +37,7 @@ function logic (req, res, next) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(error, 'POST /api/reporters/firebaseToken');
+      // req.logger.error(error, 'POST /api/reporters/firebaseToken');
       if (error.response.body && error.response.body.httpCode) {
         res.status(error.response.body.httpCode).send(error.response.body);
       }

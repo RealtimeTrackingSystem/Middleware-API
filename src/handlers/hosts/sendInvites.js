@@ -23,7 +23,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'POST /api/hosts/sendInvites');
+    // req.logger.warn(errorObject, 'POST /api/hosts/sendInvites');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -54,7 +54,7 @@ function sendInvite (req, res, next) {
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'POST /api/hosts/invites');
+      // req.logger.error(err, 'POST /api/hosts/invites');
       res.status(500).send(error);
     });
 }
@@ -71,7 +71,7 @@ function populateInvite (req, res, next) {
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'POST /api/hosts/invites');
+      // req.logger.error(err, 'POST /api/hosts/invites');
       res.status(500).send(error);
     });
 }
@@ -87,7 +87,7 @@ function respond (req, res) {
     statusCode: 0,
     httpCode: 201
   };
-  req.logger.info(result, 'POST /api/hosts/invites');
+  // req.logger.info(result, 'POST /api/hosts/invites');
   res.status(result.httpCode).send(result);
 }
 
