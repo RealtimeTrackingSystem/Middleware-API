@@ -19,7 +19,7 @@ function validateQuery (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn('GET /api/people', errorObject);
+    // req.logger.warn('GET /api/people', errorObject);
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -31,7 +31,7 @@ function logic (req, res) {
   const { limit, page } = req.query;
   return req.DB.User.findMembers(hostId, page, limit)
     .then((result) => {
-      req.logger.info(result, 'GET /api/host-members/:hostId');
+      // req.logger.info(result, 'GET /api/host-members/:hostId');
       const response = {
         status: 'SUCCESS',
         statusCode: 0,
@@ -43,7 +43,7 @@ function logic (req, res) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(error, 'GET /api/host-members/:hostId');
+      // req.logger.error(error, 'GET /api/host-members/:hostId');
       return res.status(500).send(err);
     });
 }

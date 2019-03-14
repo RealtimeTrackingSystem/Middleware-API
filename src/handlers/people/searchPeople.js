@@ -25,7 +25,7 @@ function validateQuery (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn('GET /api/people', errorObject);
+    // req.logger.warn('GET /api/people', errorObject);
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -41,14 +41,14 @@ function logic (req, res) {
         statusCode: 0,
         httpCode: 200
       };
-      req.logger.info(success, 'GET /api/people');
+      // req.logger.info(success, 'GET /api/people');
       success.people = response.people;
       success.count = response.count;
       res.status(200).send(success);
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(error, 'GET /api/people');
+      // req.logger.error(error, 'GET /api/people');
       return res.status(500).send(err);
     });
 }

@@ -41,7 +41,7 @@ function validateParams (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'GET /api/reports');
+    // req.logger.warn(errorObject, 'GET /api/reports');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -75,7 +75,7 @@ function logic (req, res, next) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(error, 'GET /api/reports');
+      // req.logger.error(error, 'GET /api/reports');
       return res.status(500).send(err);
     });
 }
@@ -89,7 +89,7 @@ function populateUser (req, res, next) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(error, 'GET /api/reports');
+      // req.logger.error(error, 'GET /api/reports');
       return res.status(500).send(err);
     });
 }
@@ -101,7 +101,7 @@ function respond (req, res) {
     statusCode: 0,
     httpCode: 200
   };
-  req.logger.info(success, 'GET /api/reports');
+  // req.logger.info(success, 'GET /api/reports');
   success.reports = response.reports;
   success.count = response.count;
   res.status(200).send(success);

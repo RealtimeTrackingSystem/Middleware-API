@@ -12,7 +12,7 @@ function logic (req, res) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('POST /api/people/summons', error);
+      // req.logger.error('POST /api/people/summons', error);
       if (error.response.body && error.response.body.httpCode) {
         return res.status(error.response.body.httpCode).send(error.response.body);
       }

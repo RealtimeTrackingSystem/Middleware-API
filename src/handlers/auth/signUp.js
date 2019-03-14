@@ -123,7 +123,7 @@ function validateParams (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'POST /api/auth/signup');
+    // req.logger.warn(errorObject, 'POST /api/auth/signup');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -153,12 +153,12 @@ function checkDuplicateCredentials (req, res, next) {
     .then(function (user) {
       if (user) {
         const error = lib.errorResponses.validationError([{msg: 'Invalid Parameter: Username or Email - Already In Use'}]);
-        req.logger.warn(error, 'POST /api/auth/signup');
+        // req.logger.warn(error, 'POST /api/auth/signup');
         return res.status(400).send(error);
       }
       return next();
     }).catch(function (err) {
-      req.logger.error(err, 'POST /api/auth/signup');
+      // req.logger.error(err, 'POST /api/auth/signup');
       const errorObject = lib.errorResponses.internalServerError('Failed in Checking Credentials');
       return res.status(errorObject.httpCode).send(errorObject);
     });
@@ -169,12 +169,12 @@ function checkDuplicateEmail (req, res, next) {
     .then(function (user) {
       if (user) {
         const error = lib.errorResponses.validationError([{msg: 'Invalid Parameter: Username or Email - Already In Use'}]);
-        req.logger.warn(error, 'POST /api/auth/signup');
+        // req.logger.warn(error, 'POST /api/auth/signup');
         return res.status(400).send(error);
       }
       return next();
     }).catch(function (err) {
-      req.logger.error(err, 'POST /api/auth/signup');
+      // req.logger.error(err, 'POST /api/auth/signup');
       const errorObject = lib.errorResponses.internalServerError('Failed in Checking Credentials');
       return res.status(errorObject.httpCode).send(errorObject);
     });
@@ -242,7 +242,7 @@ function logic (req, res, next) {
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'POST /api/auth/signup');
+      // req.logger.error(err, 'POST /api/auth/signup');
       res.status(500).send(error);
     });
 }
@@ -269,7 +269,7 @@ function replicateUser (req, res, next) {
       return next();
     })
     .catch(function (err) {
-      req.logger.error(err, 'POST /api/auth/signup');
+      // req.logger.error(err, 'POST /api/auth/signup');
       return rollBack(user._id, err)
         .then(function (result) {
           const error = result.response.body;
@@ -277,7 +277,7 @@ function replicateUser (req, res, next) {
         })
         .catch(function (err) {
           const error = lib.errorResponses.internalServerError('Internal Server Error');
-          req.logger.error(err, 'POST /api/auth/signup');
+          // req.logger.error(err, 'POST /api/auth/signup');
           res.status(500).send(error);
         });
     });
@@ -291,11 +291,11 @@ function appendReporterId (req, res, next) {
       user = user.toObject();
       delete user.password;
       req.$scope.newUser = user;
-      req.$scope.token = lib.crypto.encodeToken(user);
+      req.$scope.token = lib.crypto.encodeToken(user._id);
       next();
     })
     .catch(function (err) {
-      req.logger.error(err, 'POST /api/auth/signup');
+      // req.logger.error(err, 'POST /api/auth/signup');
       const error = lib.errorResponses.internalServerError('Internal Server Error');
       return rollBack(user._id, error)
         .then(function (result) {
@@ -303,7 +303,7 @@ function appendReporterId (req, res, next) {
           res.status(error.httpCode).send(error);
         })
         .catch(function (err) {
-          req.logger.error(err, 'POST /api/auth/signup');
+          // req.logger.error(err, 'POST /api/auth/signup');
           res.status(500).send(error);
         });
     });
@@ -319,7 +319,7 @@ function respond (req, res) {
       token: req.$scope.token
     }
   };
-  req.logger.info(result, 'POST /api/auth/signup');
+  // req.logger.info(result, 'POST /api/auth/signup');
   res.status(result.httpCode).send(result);
 }
 

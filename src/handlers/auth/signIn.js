@@ -2,7 +2,7 @@
 
 const lib = require('../../lib');
 function logic (req, res) {
-  const token = lib.crypto.encodeToken(req.user);
+  const token = lib.crypto.encodeToken(req.user._id);
   const result = {
     status: 'SUCCESS',
     statusCode: 0,
@@ -12,12 +12,12 @@ function logic (req, res) {
       token: token
     }
   };
-  req.logger.info(result, 'POST /api/auth/signin');
+  // req.logger.info(result, 'POST /api/auth/signin');
   res.status(result.httpCode).send(result);
 }
 
 function rehydrateCredentials (req, res) {
-  const token = lib.crypto.encodeToken(req.user);
+  const token = lib.crypto.encodeToken(req.user._id);
   const result = {
     status: 'SUCCESS',
     statusCode: 0,
@@ -27,7 +27,7 @@ function rehydrateCredentials (req, res) {
       token: token
     }
   };
-  req.logger.info(result, 'POST /api/auth/rehydrate');
+  // req.logger.info(result, 'POST /api/auth/rehydrate');
   res.status(result.httpCode).send(result);
 }
 

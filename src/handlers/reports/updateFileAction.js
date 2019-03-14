@@ -13,7 +13,7 @@ function logic (req, res) {
     })
     .catch(function (error) {
       const err = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error('PUT /api/people/fileActions/:fileActionId', error);
+      // req.logger.error('PUT /api/people/fileActions/:fileActionId', error);
       if (error.response.body && error.response.body.httpCode) {
         return res.status(error.response.body.httpCode).send(error.response.body);
       }

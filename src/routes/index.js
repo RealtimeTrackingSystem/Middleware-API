@@ -7,7 +7,7 @@ function routes (app) {
       httpCode: 200,
       message: 'MIDDLEWARE API is online!'
     };
-    req.logger.info(success, 'GET /echo');
+    // req.logger.info(success, 'GET /echo');
     res.status(200).send(success);
   });
   app.use(require('./auth.route'));
@@ -24,7 +24,7 @@ function routes (app) {
       httpCode: 404,
       message: message
     };
-    req.logger.warn(error, path);
+    // req.logger.warn(error, path);
     res.status(404).send(error);
   });
 }

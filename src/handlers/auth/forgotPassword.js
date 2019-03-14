@@ -16,7 +16,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'POST /api/auth/signup');
+    // req.logger.warn(errorObject, 'POST /api/auth/signup');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -41,7 +41,7 @@ function checkUserEmail (req, res, next) {
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'DELETE /api/auth/password');
+      // req.logger.error(err, 'DELETE /api/auth/password');
       res.status(500).send(error);
     });
 }
@@ -65,7 +65,7 @@ function logic (req, res, next) {
       } else {
         error = lib.errorResponses.internalServerError('Internal Server Error');
       }
-      req.logger.error(err, 'DELETE /api/auth/password');
+      // req.logger.error(err, 'DELETE /api/auth/password');
       res.status(error.httpCode).send(error);
     });
 }
@@ -80,13 +80,13 @@ function sendEmail (req, res, next) {
   return req.mailer.bulkSimpleMail(mails)
     .then(function (results) {
       req.$scope.sentMails = results;
-      req.logger.info(results, 'DELETE /api/auth/password');
+      // req.logger.info(results, 'DELETE /api/auth/password');
       next();
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
       error.message = 'Unable to send temporary password, Please try again.';
-      req.logger.error(err, 'DELETE /api/auth/password');
+      // req.logger.error(err, 'DELETE /api/auth/password');
       res.status(500).send(error);
     });
 }
@@ -97,7 +97,7 @@ function respond (req, res) {
     statusCode: 0,
     httpCode: 201
   };
-  req.logger.info(result, 'DELETE /api/auth/password');
+  // req.logger.info(result, 'DELETE /api/auth/password');
   res.status(result.httpCode).send(result);
 }
 

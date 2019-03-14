@@ -15,7 +15,7 @@ function checkProfilePic (req, res, next) {
       httpCode: 400,
       message: 'Missing Parameter: Profile Picture'
     };
-    req.logger.warn(error, 'PUT /api/auth/profilepic');
+    // req.logger.warn(error, 'PUT /api/auth/profilepic');
     return res.status(error.httpCode).send(error);
   }
 
@@ -46,7 +46,7 @@ function logic (req, res, next) {
         httpCode: 500,
         message: 'Internal Server Error'
       };
-      req.logger.error(err, 'PUT /api/auth/profilepic');
+      // req.logger.error(err, 'PUT /api/auth/profilepic');
       res.status(error.httpCode).send(error);
     });
 }
@@ -66,7 +66,7 @@ function replicateReporter (req, res, next) {
         httpCode: 500,
         message: 'Internal Server Error'
       };
-      req.logger.error(err, 'PUT /api/auth/profilepic');
+      // req.logger.error(err, 'PUT /api/auth/profilepic');
       res.status(error.httpCode).send(error);
     });
 }
@@ -77,7 +77,7 @@ function respond (req, res) {
     statusCode: 0,
     httpCode: 201
   };
-  req.logger.info(response, 'PUT /api/auth/profilepic/:reporterId');
+  // req.logger.info(response, 'PUT /api/auth/profilepic/:reporterId');
   res.status(response.httpCode).send(response);
 }
 

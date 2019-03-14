@@ -22,7 +22,7 @@ function validateParams (req, res, next) {
   }
 
   if (error) {
-    req.logger.warn(error, 'POST /api/v1/reports/mass-update-status');
+    // req.logger.warn(error, 'POST /api/v1/reports/mass-update-status');
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -32,15 +32,15 @@ function logic (req, res) {
   const reportUpdates = req.body.reportUpdates;
   return req.api.report.massStatusUpdate(reportUpdates)
     .then(response => {
-      req.logger.info(response, 'POST /api/v1/reports/mass-update-status');
+      // req.logger.info(response, 'POST /api/v1/reports/mass-update-status');
       res.status(response.httpCode).send(response);
     })
     .catch(function (err) {
       if (err.httpCode) {
-        req.logger.warn(err, 'POST /api/v1/reports/mass-update-status');
+        // req.logger.warn(err, 'POST /api/v1/reports/mass-update-status');
         return res.status(err.httpCode).send(err);
       }
-      req.logger.error(err, 'POST /api/v1/reports/mass-update-status');
+      // req.logger.error(err, 'POST /api/v1/reports/mass-update-status');
       res.status(500).send({
         status: 'ERROR',
         statusCode: 1,

@@ -16,12 +16,12 @@ function checkHostAdminship (req, res, next) {
     message: 'User Not a Host Admin'
   };
   if (!userHost) {
-    req.logger.warn(error, 'GET /api/hosts/request/:hostId');
+    // req.logger.warn(error, 'GET /api/hosts/request/:hostId');
     return res.status(error.httpCode).send(error);
   }
   const isHostAdmin = userHost.isAdmin;
   if (!isHostAdmin) {
-    req.logger.warn(error, 'GET /api/hosts/request/:hostId');
+    // req.logger.warn(error, 'GET /api/hosts/request/:hostId');
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -60,7 +60,7 @@ function getUsers (req, res, next) {
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'POST /api/hosts/requests/:hostId');
+      // req.logger.error(err, 'POST /api/hosts/requests/:hostId');
       res.status(500).send(error);
     });
 }
@@ -73,7 +73,7 @@ function respond (req, res) {
     users: req.$scope.users,
     count: req.$scope.count
   };
-  req.logger.info(response, 'GET /api/hosts/requests/:hostsId');
+  // req.logger.info(response, 'GET /api/hosts/requests/:hostsId');
   res.status(200).send(response);
 }
 

@@ -9,7 +9,7 @@ function validateParam (req, res, next) {
       httpCode: 400,
       message: 'Invalid Parameter: Reporter ID'
     };
-    req.logger.warn(error, 'GET /api/reporters/:reporterId');
+    // req.logger.warn(error, 'GET /api/reporters/:reporterId');
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -26,7 +26,7 @@ function logic (req, res, next) {
           httpCode: 404,
           message: 'Reporter Not Found'
         };
-        req.logger.warn(error, 'GET /api/reporters/:reporterId');
+        // req.logger.warn(error, 'GET /api/reporters/:reporterId');
         return res.status(error.httpCode).send(error);
       }
       req.$scope.reporter = result.reporter;
@@ -34,7 +34,7 @@ function logic (req, res, next) {
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'GET /api/reporters/:reporterId');
+      // req.logger.error(err, 'GET /api/reporters/:reporterId');
       res.status(error.httpCode).send(error);
     });
 }
@@ -46,7 +46,7 @@ function respond (req, res) {
     httpCode: 200,
     reporter: req.$scope.reporter
   };
-  req.logger.info(success, 'GET /api/reporters/:reporterId');
+  // req.logger.info(success, 'GET /api/reporters/:reporterId');
   res.status(success.httpCode).send(success);
 }
 

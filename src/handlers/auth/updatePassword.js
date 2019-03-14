@@ -35,7 +35,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'PUT /api/auth/password');
+    // req.logger.warn(errorObject, 'PUT /api/auth/password');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -70,7 +70,7 @@ function logic (req, res, next) {
       } else {
         error = lib.errorResponses.internalServerError('Internal Server Error');
       }
-      req.logger.error(err, 'PUT /api/auth/password');
+      // req.logger.error(err, 'PUT /api/auth/password');
       res.status(error.httpCode).send(error);
     });
 }
@@ -81,7 +81,7 @@ function respond (req, res) {
     statusCode: 0,
     httpCode: 201
   };
-  req.logger.info(result, 'PUT /api/auth/password');
+  // req.logger.info(result, 'PUT /api/auth/password');
   res.status(result.httpCode).send(result);
 }
 

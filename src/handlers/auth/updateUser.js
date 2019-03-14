@@ -8,7 +8,7 @@ internals.catchError = (error, req, res) => {
     httpCode: 500,
     message: 'Internal Server Error'
   };
-  req.logger.error(error, 'PUT /api/auth/user');
+  // req.logger.error(error, 'PUT /api/auth/user');
   res.status(err.httpCode).send(err);
 };
 
@@ -36,7 +36,7 @@ internals.rollbackUser = (req, res) => {
         httpCode: 500,
         message: 'Failed to update reporter details'
       };
-      req.logger.error(error, 'PUT /api/auth/user');
+      // req.logger.error(error, 'PUT /api/auth/user');
       res.status(500).send(error);
     })
     .catch(err => internals.catchError(err, req, res));
@@ -142,7 +142,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'POST /api/reporters');
+    // req.logger.warn(errorObject, 'POST /api/reporters');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -234,7 +234,7 @@ function respond (req, res) {
     statusCode: 0,
     httpCode: 201,
   };
-  req.logger.info(result, 'PUT /api/auth/user');
+  // req.logger.info(result, 'PUT /api/auth/user');
   res.status(result.httpCode).send(result);
 }
 

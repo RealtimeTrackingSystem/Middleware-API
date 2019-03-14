@@ -9,14 +9,14 @@ function logic (req, res, next) {
     })
     .catch(function (result) {
       const err = result.response.body;
-      req.logger.error(err, 'GET /api/hosts/:hostId');
+      // req.logger.error(err, 'GET /api/hosts/:hostId');
       res.status(err.httpCode).send(err);
     });
 }
 
 function respond (req, res) {
   const result = req.$scope.result;
-  req.logger.info(result, 'GET /api/hosts/:hostId');
+  // req.logger.info(result, 'GET /api/hosts/:hostId');
   res.status(result.httpCode).send(result);
 }
 
