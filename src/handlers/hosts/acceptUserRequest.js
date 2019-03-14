@@ -19,7 +19,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'PUT /api/hosts/requests/:hostId');
+    // req.logger.warn(errorObject, 'PUT /api/hosts/requests/:hostId');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -37,20 +37,20 @@ function checkUser (req, res, next) {
     message: 'Invalid Parameter: User ID'
   };
   if (!isObjectId) {
-    req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
+    // req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
     return res.status(error.httpCode).send(error);
   }
   return req.DB.User.findById(userId)
     .then(function (user) {
       if (!user) {
-        req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
+        // req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
         return res.status(error.httpCode).send(error);
       }
       const membership = _.find(user.hosts, h => {
         return h._id === hostId;
       });
       if (!membership) {
-        req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
+        // req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
         return res.status(error.httpCode).send(error);
       }
       if (!membership.isBlocked) {
@@ -80,7 +80,7 @@ function checkUser (req, res, next) {
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'POST /api/hosts/requests/:hostId');
+      // req.logger.error(err, 'POST /api/hosts/requests/:hostId');
       res.status(500).send(error);
     });
 }
@@ -97,16 +97,32 @@ function logic (req, res, next) {
   return req.DB.User.approveUserToHost(userId, hostId)
     .then(function (user) {
       if (!user) {
-        req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
+        // req.logger.warn(error, 'PUT /api/hosts/requests/:hostId');
         return res.status(error.httpCode).send(error);
       }
       next();
     })
     .catch(function (err) {
       const error = lib.errorResponses.internalServerError('Internal Server Error');
-      req.logger.error(err, 'POST /api/hosts/requests/:hostId');
+      // req.logger.error(err, 'POST /api/hosts/requests/:hostId');
       res.status(500).send(error);
     });
+}
+
+function sendNotification (req, res, next) {
+  const userToApprove = req.$scope.userToApprove;
+  const hostId = req.params.hostId;
+
+  return req.api.host.hostRequestApprovedNotif(hostId, userToApprove.reporterID, { type: 'ACCEPT_REQUEST' })
+    .then((result) => {
+      // req.logger.info(result, 'POST /api/hosts/requests/:hostId');
+      next();
+    })
+    .catch((err) => {
+      // req.logger.error(err, 'POST /api/hosts/requests/:hostId');
+      next();
+    });
+
 }
 
 function respond (req, res) {
@@ -115,7 +131,7 @@ function respond (req, res) {
     statusCode: 0,
     httpCode: 201
   };
-  req.logger.info(response, 'PUT /api/hosts/requests/:hostsId');
+  // req.logger.info(response, 'PUT /api/hosts/requests/:hostsId');
   res.status(201).send(response);
 }
 
@@ -123,5 +139,6 @@ module.exports = {
   validateBody,
   checkUser,
   logic,
+  sendNotification,
   respond
 };

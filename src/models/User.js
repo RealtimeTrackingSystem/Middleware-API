@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const _ = require('lodash');
 const lib = require('../lib');
+const moment = require('moment');
 
 const USER_FIELDS = [
   'username', 'email', 'fname', 'lname', 'alias',
@@ -11,21 +12,20 @@ const USER_FIELDS = [
 ];
 
 const UserSchema = new Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String },
-  fname: { type: String },
-  lname: { type: String },
-  gender: { type: String, enum: ['M', 'F'], required: true },
-  alias: { type: String },
-  age: { type: Number },
-  street: { type: String },
-  barangay: { type: String },
-  city: { type: String },
-  region: { type: String },
-  country: { type: String },
-  zip: { type: String },
-  reporterID: { type: String },
+  username: { type: String, required: true, index: true, unique: true },
+  email: { type: String, required: true, index: true, unique: true  },
+  password: { type: String, index: true  },
+  fname: { type: String, index: true  },
+  lname: { type: String, index: true  },
+  gender: { type: String, enum: ['M', 'F'], required: true, index: true  },
+  alias: { type: String, index: true  },
+  street: { type: String, index: true  },
+  barangay: { type: String, index: true  },
+  city: { type: String, index: true  },
+  region: { type: String, index: true  },
+  country: { type: String, index: true  },
+  zip: { type: String, index: true  },
+  reporterID: { type: String, index: true  },
   hosts: [{
     _id: String,
     isOwner: Boolean,
@@ -34,8 +34,17 @@ const UserSchema = new Schema({
     createdAt: Date,
     updatedAt: Date
   }],
-  accessLevel: { type: String, Enum: ['ADMIN', 'USER'], default: 'USER' }
-}, { timestamps: true });
+  accessLevel: { type: String, Enum: ['ADMIN', 'HOST', 'USER'], default: 'USER', index: true  },
+  profilePicture: { type: Schema.Types.ObjectId, ref: 'Picture', index: true  },
+  birthday: { type: String, required: true }
+}, { timestamps: true, getters: true, virtuals: true });
+
+UserSchema.set('toObject', { getters: true, virtuals: true });
+
+UserSchema.virtual('age').get(function () {
+  return moment().diff(this.birthday, 'years');
+});
+
 
 /* private functions */
 
@@ -144,7 +153,7 @@ UserSchema.statics.add = function (user) {
         lname: user.lname,
         gender: user.gender,
         alias: user.alias,
-        age: user.age,
+        birthday: user.birthday,
         street: user.street,
         barangay: user.barangay,
         city: user.city,
@@ -227,6 +236,100 @@ UserSchema.statics.approveUserToHost = function (userId, hostId) {
     .then(user => unblockHost(user, hostId))
     .then(hosts => updateHosts(userId, hosts));
 };
+
+UserSchema.statics.forgotPassword = function (userId) {
+  let tempPass = lib.crypto.codeGenerator('*+#+', 10).join('');
+  return lib.crypto.hashAndSalt(tempPass)
+    .then(function (hashedPass) {
+      return User.findByIdAndUpdate(userId, {
+        password: hashedPass
+      });
+    })
+    .then(function (user) {
+      return {
+        user,
+        temporaryPassword: tempPass
+      };
+    });
+};
+
+UserSchema.statics.updatePassword = function (userId, oldPassword, newPassword) {
+  return User.findById(userId)
+    .then(function (user) {
+      return lib.crypto.compareHash(oldPassword, user.password);
+    })
+    .then(function (isMatch) {
+      if (!isMatch) {
+        throw {
+          success: false,
+          reason: 'Invalid Parameter: Old Password'
+        };
+      }
+      return lib.crypto.hashAndSalt(newPassword);
+    })
+    .then(function (hashedPass) {
+      return User.findByIdAndUpdate(userId, {
+        password: hashedPass
+      });
+    })
+    .then(function (user) {
+      return user;
+    });
+};
+
+UserSchema.statics.findMembers = async function (hostId, page = null, limit = null) {
+  try {
+    const query = {
+      $and: [
+        { 'hosts._id': hostId },
+        { 'hosts.isBlocked': false }
+      ]
+    };
+    let membersQ = User.find(query).select('-password');
+    if (limit !== null) {
+      const offset = Number(page) * Number(limit) || 0;
+      membersQ = User.find(query).select('-password').skip(offset).limit(Number(limit));
+    }
+    const members = await membersQ || [];
+    const count = await User.countDocuments(query);
+    return {
+      members,
+      count
+    };
+  } catch (e) {
+    throw e;
+  }
+};
+
+UserSchema.statics.setAsAdmin = function (userId, hostId, isAdmin = false) {
+  return User.findOne({
+    _id: userId
+  })
+    .then((user) => {
+      if (!user) {
+        throw {
+          error: true,
+          message: 'Invalid Parameter: User Id'
+        };
+      }
+      const hosts = user.hosts;
+      const hostIndex = _.findIndex(hosts, (host) => {
+        return host._id.toString() === hostId;
+      });
+      if (hostIndex < 0) {
+        throw {
+          error: true,
+          message: 'Invalid Parameter: Host Id'
+        };
+      }
+      hosts[hostIndex].isAdmin = isAdmin;
+      return User.findOneAndUpdate({
+        _id: userId
+      }, {
+        hosts: hosts
+      });
+    })
+}
 
 const User = mongoose.model('User', UserSchema);
 

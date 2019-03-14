@@ -21,6 +21,7 @@ const Api = require('./lib/rcrts-report-api');
 //   require('dotenv').load();
 // }
 
+
 // set up express app
 const app = express();
 const config = CONFIG[process.env.NODE_ENV || 'development'];
@@ -68,9 +69,10 @@ app.use(validator({
 
 // adding req variables
 app.use(function (req, res, next) {
-  req.logger = {};
+  // req.logger = {};
   req.api = new Api(config.REPORT_API_KEY, config.REPORT_API_URL, config.REPORT_API_PORT);
-  req.logger = lib.logger;
+  req.mailer = lib.mailer;
+  // req.logger = lib.logger;
   req.$scope = {};
   req.DB = DB;
   next();

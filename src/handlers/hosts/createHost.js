@@ -111,7 +111,7 @@ function validateBody (req, res, next) {
   const validationErrors = req.validationErrors();
   if (validationErrors) {
     const errorObject = lib.errorResponses.validationError(validationErrors);
-    req.logger.warn(errorObject, 'POST /api/hosts');
+    // req.logger.warn(errorObject, 'POST /api/hosts');
     return res.status(errorObject.httpCode).send(errorObject);
   } else {
     return next();
@@ -142,7 +142,7 @@ function logic (req, res, next) {
     })
     .catch(function (result) {
       const err = result.response.body;
-      req.logger.error(err, 'POST /api/hosts');
+      // req.logger.error(err, 'POST /api/hosts');
       res.status(err.httpCode).send(err);
     });
 }
@@ -160,14 +160,14 @@ function appendHostToUser (req, res, next) {
           httpCode: 400,
           message: result.error
         };
-        req.logger.warn(error, 'POST /api/hosts');
+        // req.logger.warn(error, 'POST /api/hosts');
         return res.status(error.httpCode).send(error);
       }
       next();
     })
     .catch(function (result) {
       const err = result.response.body;
-      req.logger.error(err, 'POST /api/hosts');
+      // req.logger.error(err, 'POST /api/hosts');
       res.status(err.httpCode).send(err);
     });
 }
@@ -180,7 +180,7 @@ function respond (req, res) {
     httpCode: 201,
     host: host
   };
-  req.logger.info(response, 'POST /api/hosts');
+  // req.logger.info(response, 'POST /api/hosts');
   res.status(201).send(response);
 }
 

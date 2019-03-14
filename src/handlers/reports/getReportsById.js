@@ -11,7 +11,7 @@ function validateParams (req, res, next) {
       httpCode: 400,
       message: 'Invalid Parameter: Report ID'
     };
-    req.logger.warn(error, 'GET /api/reports/:reporterId');
+    // req.logger.warn(error, 'GET /api/reports/:reporterId');
     return res.status(error.httpCode).send(error);
   }
   next();
@@ -28,7 +28,7 @@ function logic (req, res, next) {
       if (err.httpCode) {
         return res.status(err.httpCode).send(err);
       }
-      req.logger.error(err, 'GET /api/reports/:reportId');
+      // req.logger.error(err, 'GET /api/reports/:reportId');
       res.status(500).send({
         status: 'ERROR',
         statusCode: 1,
@@ -38,8 +38,28 @@ function logic (req, res, next) {
     });
 }
 
+function populateUser (req, res, next) {
+  const report = req.$scope.report;
+  const reporterId = report._reporter && report._reporter._id ? report._reporter._id : report._reporter;
+  return req.DB.User.findOne({
+    reporterID: reporterId
+  })
+    .select('-password')
+    .then((user) => {
+      report.user = user;
+      req.$scope.report = report;
+      next();
+    })
+    .catch((err) => {
+      // req.logger.warn(err, 'GET /api/reports/:reportId');
+      report.user = null;
+      req.$scope.report = report;
+      next();
+    });
+}
+
 function respond (req, res) {
-  req.logger.info(req.$scope.report, 'GET /api/reports/:reportId');
+  // req.logger.info(req.$scope.report, 'GET /api/reports/:reportId');
   res.status(200).send({
     status: 'SUCCESS',
     statusCode: 0,
@@ -51,5 +71,6 @@ function respond (req, res) {
 module.exports = {
   validateParams,
   logic,
+  populateUser,
   respond
 };

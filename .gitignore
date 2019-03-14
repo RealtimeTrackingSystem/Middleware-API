@@ -4,3 +4,6 @@
 */**/.env
 .env
 *.log
+service-account.json
+.idea
+/.idea

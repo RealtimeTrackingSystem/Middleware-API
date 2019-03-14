@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: middleware-api-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       component: middleware-api
@@ -36,8 +36,26 @@ spec:
                   name: sendgrid
                   key: SENDGRID_API
             - name: REPORT_API_KEY
-              value: 612040E530Z5P9D0B5W369Z1U038E6K9F5X183F4
+              valueFrom:
+                secretKeyRef:
+                  name: report-api
+                  key: REPORT_API_KEY
             - name: REPORT_API_URL
               value: http://report-api-cluster-ip-service
             - name: REPORT_API_PORT
               value: '5000'
+            - name: CLOUDINARY_CLOUD_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudinary
+                  key: CLOUDINARY_CLOUD_NAME
+            - name: CLOUDINARY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloudinary-api
+                  key: CLOUDINARY_API_KEY
+            - name: CLOUDINARY_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cloudinary-secret
+                  key: CLOUDINARY_API_SECRET
